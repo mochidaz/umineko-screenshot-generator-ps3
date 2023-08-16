@@ -151,6 +151,28 @@ function createThumbnails(map, position, id, imageId) {
             while (imageContainer.firstChild) {
                 imageContainer.removeChild(imageContainer.firstChild);
             }
+        } else if (position === "metaWorldLeft") {
+            metaLeft = ""
+            const selected = document.getElementById("selectedMetaLeftSprite");
+            selected.src = ""
+            while (imageContainer.firstChild) {
+                imageContainer.removeChild(imageContainer.firstChild);
+            }
+        } else if (position === "metaWorldCenter") {
+            metaCenter = ""
+            const selected = document.getElementById("selectedMetaCenterSprite");
+            selected.src = ""
+            while (imageContainer.firstChild) {
+                imageContainer.removeChild(imageContainer.firstChild);
+            }
+        }
+        else if (position === "metaWorldRight") {
+            metaRight = ""
+            const selected = document.getElementById("selectedMetaRightSprite");
+            selected.src = ""
+            while (imageContainer.firstChild) {
+                imageContainer.removeChild(imageContainer.firstChild);
+            }
         }
     }
 
