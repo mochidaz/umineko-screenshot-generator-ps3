@@ -9,6 +9,8 @@ def traverse_directory(root_dir):
             background_path = os.path.join(dirpath, filename)
             background_list.append(background_path)
 
+    background_list.sort()
+
     return background_list
 
 

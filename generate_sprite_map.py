@@ -6,6 +6,7 @@ def traverse_directory(root_dir):
     for dirpath, _, filenames in os.walk(root_dir):
         folder_name = os.path.basename(dirpath)
         sprite_paths = [os.path.join(dirpath, filename) for filename in filenames]
+        sprite_paths.sort()  # Sort the sprite paths
         sprite_map[folder_name] = sprite_paths
 
     return sprite_map
@@ -13,7 +14,7 @@ def traverse_directory(root_dir):
 def generate_js_file(sprite_map, output_file):
     with open(output_file, 'w') as f:
         f.write('const spriteMap = {\n')
-        for folder_name, sprite_paths in sprite_map.items():
+        for folder_name, sprite_paths in sorted(sprite_map.items()):  # Sort the sprite_map items by folder_name
             if folder_name == "sprites":
                 continue
             f.write(f"  '{folder_name}': [\n")
