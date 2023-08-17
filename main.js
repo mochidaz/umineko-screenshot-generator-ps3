@@ -233,7 +233,7 @@ function generate() {
         console.log(error)
     });
 
-    const metaOverlayPath = "./assets/metaworld/hana1.png"
+    const metaOverlayPath = "./assets/metaworld/hana1.webp"
 
     const metaOverlay = new Image();
     metaOverlay.src = metaOverlayPath
@@ -346,6 +346,13 @@ function generate() {
             const text = document.getElementById("text").value;
             ctx.textShadow = "2px 2px #000000";
             wrapText(ctx, text, textX, textY, maxTextWidth, lineHeight);
+            const dataURL = ctx.toDataURL('image/png');
+            const downloadLink = document.createElement("a");
+            downloadLink.href = dataURL;
+            downloadLink.download = "image.png";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
         })
         .catch(error => {
             console.log(error);
