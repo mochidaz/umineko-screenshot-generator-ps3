@@ -55,19 +55,36 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.7);
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             z-index: 9999;
-        }
-
-        #loadingMessage {
-            color: white;
-            font-size: 24px;
         }
 
         #loadingImage {
             width: 100%;
             height: 100%;
+        }
+
+        #loadingText {
+            color: white;
+            font-size: 20px;
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            animation: fadeLoop 2s infinite;
+        }
+
+        /* Animation keyframes */
+        @keyframes fadeLoop {
+            0%, 100% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
         }
     </style>
 
@@ -78,7 +95,8 @@
 </head>
 <body>
 <div id="loadingScreen">
-    <img id="loadingImage" src="assets/metaworld/hana1.webp" alt="Loading...">
+    <img src="assets/metaworld/hana1.webp" alt="Loading Image">
+    <div id="loadingText">Loading assets... Please wait</div>
 </div>
 <h1>Umineko Screenshot Generator</h1>
 
