@@ -372,20 +372,6 @@ function loadImageAsync(url) {
         }
     });
 }
-
-function loadImage(image) {
-    return new Promise((resolve, reject) => {
-        image.onload = () => resolve(image);
-        image.onerror = (error) => reject(error);
-    });
-}
-
-function loadFont(font) {
-    return new Promise((resolve, reject) => {
-        font.onload = () => resolve(font);
-        font.onerror = (error) => reject(error);
-    });
-}
 function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     const colorCodes = {
         red: "#ff0000",
@@ -458,3 +444,7 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
         }
     }
 }
+
+window.addEventListener('load', function () {
+    document.getElementById('loadingScreen').style.display = 'none';
+});
