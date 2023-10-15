@@ -181,7 +181,9 @@ function loadBackgrounds() {
     const backgroundsContainer = document.getElementById("backgroundsContainer");
 
     for (let i = 0; i < backgroundList.length; i++) {
-        const background = backgroundList[i];
+        const backgroundMain = backgroundList[i];
+
+        const background = backgroundMain.thumbnail
 
         const imgElement = document.createElement("img");
 
@@ -194,7 +196,7 @@ function loadBackgrounds() {
         imgElement.style.margin = "5px";
         imgElement.style.border = "2px solid"
         imgElement.onclick = function() {
-            bg = background
+            bg = backgroundMain.background
             const selected = document.getElementById("selectedBackground");
             selected.src = background
         }

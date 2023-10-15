@@ -1,29 +1,31 @@
 import os
-from PIL import Image
 
-def create_thumbnail(input_image_path, output_thumbnail_path, size=(100, 100)):
-    try:
-        with Image.open(input_image_path) as img:
-            img.thumbnail(size)
-            img.save(output_thumbnail_path, format="WebP")
-    except Exception as e:
-        print(f"An error occurred: {e}")
+def traverse_directory(root_dir):
+    background_list = []
 
-input_directory = "assets/sprites"
-output_directory = "assets/thumbnails/sprites"
-thumbnail_size = (100, 100)
+    for dirpath, _, filenames in os.walk(root_dir):
+        for filename in filenames:
+            if filename.endswith(('.bmp', '.webp')):
+                background_path = os.path.join(dirpath, filename)
+                background_list.append(background_path)
 
-for character_name in os.listdir(input_directory):
-    character_dir = os.path.join(input_directory, character_name)
-    if os.path.isdir(character_dir):
-        thumbnail_character_dir = os.path.join(output_directory, character_name)
-        os.makedirs(thumbnail_character_dir, exist_ok=True)
+    background_list.sort()
 
-        for image_name in os.listdir(character_dir):
-            if image_name.endswith(".webp"):
-                image_path = os.path.join(character_dir, image_name)
-                thumbnail_name = image_name.rsplit(".", 1)[0] + "_thumb.webp"
-                thumbnail_path = os.path.join(thumbnail_character_dir, thumbnail_name)
+    return background_list
 
-                create_thumbnail(image_path, thumbnail_path, size=thumbnail_size)
-                print(f"Thumbnail created: {thumbnail_path}")
+
+def generate_js_file(background_list, output_file):
+    with open(output_file, 'w') as f:
+        f.write('const backgroundList = [\n')
+        for background_path in background_list:
+            thumbnail_extension = "_thumb.webp" if background_path.endswith(".bmp") else "_thumb.bmp"
+            thumbnail_path = background_path.replace(".bmp", thumbnail_extension).replace(".webp", thumbnail_extension)
+            f.write(f"  {{thumbnail: '{thumbnail_path}', background: '{background_path}'}},\n")
+        f.write('];\n\n')
+
+if __name__ == "__main__":
+    backgrounds = 'assets/backgrounds'
+    output_sprites = 'background_list.js'
+
+    background_list = traverse_directory(backgrounds)
+    generate_js_file(background_list, output_sprites)
