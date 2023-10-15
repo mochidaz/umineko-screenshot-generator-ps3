@@ -1,4 +1,3 @@
-
 var left = "";
 var center = "";
 var right = "";
@@ -27,7 +26,8 @@ function load_thumbnails(data) {
 
     for (const key in data) {
         if (data.hasOwnProperty(key) && Array.isArray(data[key]) && data[key].length > 0) {
-            const firstImagePath = data[key][0];
+            const firstImagePath = data[key][0].thumbnail;
+            console.log(firstImagePath)
             thumbnail.push([key, firstImagePath]);
         }
     }
@@ -43,13 +43,13 @@ function load_images(key, position, id) {
         imagesContainer.removeChild(imagesContainer.firstChild);
     }
 
-    let currentSprite = spriteMap[key]
+    let currentSprite = spriteMap[key];
 
     for (let i = 0; i < currentSprite.length; i++) {
 
         const imgElement = document.createElement("img");
 
-        imgElement.src = currentSprite[i]
+        imgElement.src = currentSprite[i].thumbnail
 
         imgElement.style.objectFit = "cover";
         imgElement.style.objectPosition = "center center";
@@ -59,31 +59,29 @@ function load_images(key, position, id) {
         imgElement.style.border = "2px solid"
         imgElement.onclick = function() {
             if (position === "left") {
-                left = currentSprite[i]
+                left = currentSprite[i].sprite
                 const selected = document.getElementById("selectedLeftSprite");
-                selected.src = currentSprite[i]
+                selected.src = currentSprite[i].thumbnail
             } else if (position === "center") {
-                center = currentSprite[i]
+                center = currentSprite[i].sprite
                 const selected = document.getElementById("selectedCenterSprite");
-                selected.src = currentSprite[i]
+                selected.src = currentSprite[i].thumbnail
             } else if (position === "right") {
-                right = currentSprite[i]
+                right = currentSprite[i].sprite
                 const selected = document.getElementById("selectedRightSprite");
-                selected.src = currentSprite[i]
+                selected.src = currentSprite[i].thumbnail
             } else if (position === "metaWorldLeft") {
-                metaLeft = currentSprite[i]
+                metaLeft = currentSprite[i].sprite
                 const selected = document.getElementById("selectedMetaLeftSprite");
-                selected.src = currentSprite[i]
-            }
-            else if (position === "metaWorldCenter") {
-                metaCenter = currentSprite[i]
+                selected.src = currentSprite[i].thumbnail
+            } else if (position === "metaWorldCenter") {
+                metaCenter = currentSprite[i].sprite
                 const selected = document.getElementById("selectedMetaCenterSprite");
-                selected.src = currentSprite[i]
-            }
-            else if (position === "metaWorldRight") {
-                metaRight = currentSprite[i]
+                selected.src = currentSprite[i].thumbnail
+            } else if (position === "metaWorldRight") {
+                metaRight = currentSprite[i].sprite
                 const selected = document.getElementById("selectedMetaRightSprite");
-                selected.src = currentSprite[i]
+                selected.src = currentSprite[i].thumbnail
             }
         }
 
