@@ -48,6 +48,8 @@ function load_images(key, position, id) {
     for (let i = 0; i < currentSprite.length; i++) {
 
         const imgElement = document.createElement("img");
+        let selected;
+        let targetSprite;
 
         imgElement.src = currentSprite[i].thumbnail
 
@@ -58,30 +60,40 @@ function load_images(key, position, id) {
         imgElement.style.margin = "5px";
         imgElement.style.border = "2px solid"
         imgElement.onclick = function() {
-            if (position === "left") {
-                left = currentSprite[i].sprite
-                const selected = document.getElementById("selectedLeftSprite");
-                selected.src = currentSprite[i].thumbnail
-            } else if (position === "center") {
-                center = currentSprite[i].sprite
-                const selected = document.getElementById("selectedCenterSprite");
-                selected.src = currentSprite[i].thumbnail
-            } else if (position === "right") {
-                right = currentSprite[i].sprite
-                const selected = document.getElementById("selectedRightSprite");
-                selected.src = currentSprite[i].thumbnail
-            } else if (position === "metaWorldLeft") {
-                metaLeft = currentSprite[i].sprite
-                const selected = document.getElementById("selectedMetaLeftSprite");
-                selected.src = currentSprite[i].thumbnail
-            } else if (position === "metaWorldCenter") {
-                metaCenter = currentSprite[i].sprite
-                const selected = document.getElementById("selectedMetaCenterSprite");
-                selected.src = currentSprite[i].thumbnail
-            } else if (position === "metaWorldRight") {
-                metaRight = currentSprite[i].sprite
-                const selected = document.getElementById("selectedMetaRightSprite");
-                selected.src = currentSprite[i].thumbnail
+            switch (position) {
+                case "left":
+                    left = currentSprite[i].sprite;
+                    selected = document.getElementById("selectedLeftSprite");
+                    targetSprite = currentSprite[i].thumbnail;
+                    break;
+                case "center":
+                    center = currentSprite[i].sprite;
+                    selected = document.getElementById("selectedCenterSprite");
+                    targetSprite = currentSprite[i].thumbnail;
+                    break;
+                case "right":
+                    right = currentSprite[i].sprite;
+                    selected = document.getElementById("selectedRightSprite");
+                    targetSprite = currentSprite[i].thumbnail;
+                    break;
+                case "metaWorldLeft":
+                    metaLeft = currentSprite[i].sprite;
+                    selected = document.getElementById("selectedMetaLeftSprite");
+                    targetSprite = currentSprite[i].thumbnail;
+                    break;
+                case "metaWorldCenter":
+                    metaCenter = currentSprite[i].sprite;
+                    selected = document.getElementById("selectedMetaCenterSprite");
+                    targetSprite = currentSprite[i].thumbnail;
+                    break;
+                case "metaWorldRight":
+                    metaRight = currentSprite[i].sprite;
+                    selected = document.getElementById("selectedMetaRightSprite");
+                    targetSprite = currentSprite[i].thumbnail;
+                    break;
+            }
+            if (selected) {
+                selected.src = targetSprite;
             }
         }
 
@@ -119,6 +131,8 @@ function createThumbnails(map, position, id, imageId) {
         thumbnailsContainer.appendChild(imgElement);
     }
 
+    let selected;
+
     const imgElement = document.createElement("img");
     imgElement.src = "";
     imgElement.style.objectFit = "cover";
@@ -128,49 +142,40 @@ function createThumbnails(map, position, id, imageId) {
     imgElement.style.margin = "5px";
     imgElement.style.border = "2px solid"
     imgElement.onclick = function() {
-        if (position === "left") {
-            left = ""
-            const selected = document.getElementById("selectedLeftSprite");
-            selected.src = ""
-            while (imageContainer.firstChild) {
-                imageContainer.removeChild(imageContainer.firstChild);
-            }
-        } else if (position === "center") {
-            center = ""
-            const selected = document.getElementById("selectedCenterSprite");
-            selected.src = ""
-            while (imageContainer.firstChild) {
-                imageContainer.removeChild(imageContainer.firstChild);
-            }
-        } else if (position === "right") {
-            right = ""
-            const selected = document.getElementById("selectedRightSprite");
-            selected.src = ""
-            while (imageContainer.firstChild) {
-                imageContainer.removeChild(imageContainer.firstChild);
-            }
-        } else if (position === "metaWorldLeft") {
-            metaLeft = ""
-            const selected = document.getElementById("selectedMetaLeftSprite");
-            selected.src = ""
-            while (imageContainer.firstChild) {
-                imageContainer.removeChild(imageContainer.firstChild);
-            }
-        } else if (position === "metaWorldCenter") {
-            metaCenter = ""
-            const selected = document.getElementById("selectedMetaCenterSprite");
-            selected.src = ""
-            while (imageContainer.firstChild) {
-                imageContainer.removeChild(imageContainer.firstChild);
-            }
+        switch (position) {
+            case "left":
+                left = "";
+                selected = document.getElementById("selectedLeftSprite");
+                selected.src = "";
+                break;
+            case "center":
+                center = "";
+                selected = document.getElementById("selectedCenterSprite");
+                selected.src = "";
+                break;
+            case "right":
+                right = "";
+                selected = document.getElementById("selectedRightSprite");
+                selected.src = "";
+                break;
+            case "metaWorldLeft":
+                metaLeft = "";
+                selected = document.getElementById("selectedMetaLeftSprite");
+                selected.src = "";
+                break;
+            case "metaWorldCenter":
+                metaCenter = "";
+                selected = document.getElementById("selectedMetaCenterSprite");
+                selected.src = "";
+                break;
+            case "metaWorldRight":
+                metaRight = "";
+                selected = document.getElementById("selectedMetaRightSprite");
+                selected.src = "";
+                break;
         }
-        else if (position === "metaWorldRight") {
-            metaRight = ""
-            const selected = document.getElementById("selectedMetaRightSprite");
-            selected.src = ""
-            while (imageContainer.firstChild) {
-                imageContainer.removeChild(imageContainer.firstChild);
-            }
+        while (imageContainer.firstChild) {
+            imageContainer.removeChild(imageContainer.firstChild);
         }
     }
 
@@ -253,6 +258,7 @@ function generate() {
             ctx.filter = "brightness(55%)";
 
             let meta = false
+            const scaleFactor = 1.2;
 
             if (metaLeftImage || metaRightImage || metaCenterImage) {
                 meta = true
@@ -265,7 +271,6 @@ function generate() {
             ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
 
             if (leftImage) {
-                const scaleFactor = 1.2;
                 let adder = 400;
                 const leftImageWidth = leftImage.width * scaleFactor;
                 const leftImageHeight = leftImage.height * scaleFactor;
@@ -281,7 +286,6 @@ function generate() {
             }
 
             if (rightImage) {
-                const scaleFactor = 1.2;
                 const rightImageWidth = rightImage.width * scaleFactor;
                 const rightImageHeight = rightImage.height * scaleFactor;
                 let adder = 150;
@@ -295,7 +299,6 @@ function generate() {
             }
 
             if (centerImage) {
-                const scaleFactor = 1.2;
                 const centerImageWidth = centerImage.width * scaleFactor;
                 const centerImageHeight = centerImage.height * scaleFactor;
                 const centerImageX = canvas.width / 2 - centerImageWidth / 2;
@@ -309,7 +312,6 @@ function generate() {
             }
 
             if (metaLeftImage) {
-                const scaleFactor = 1.2;
                 const metaLeftImageWidth = metaLeftImage.width * scaleFactor;
                 const metaLeftImageHeight = metaLeftImage.height * scaleFactor;
                 const metaLeftImageX = canvas.width - metaLeftImageWidth - 400;
@@ -318,7 +320,6 @@ function generate() {
             }
 
             if (metaRightImage) {
-                const scaleFactor = 1.2;
                 const metaRightImageWidth = metaRightImage.width * scaleFactor;
                 const metaRightImageHeight = metaRightImage.height * scaleFactor;
                 const metaRightImageX = canvas.width - metaRightImageWidth / 2 - 170
@@ -327,7 +328,6 @@ function generate() {
             }
 
             if (metaCenterImage) {
-                const scaleFactor = 1.2;
                 const metaCenterImageWidth = metaCenterImage.width * scaleFactor;
                 const metaCenterImageHeight = metaCenterImage.height * scaleFactor;
                 const metaCenterImageX = canvas.width / 2 - metaCenterImageWidth / 2;
