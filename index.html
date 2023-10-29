@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Umineko Screenshot Generator</title>
     <style>
@@ -7,9 +8,11 @@
             background-color: #f0f0f0;
             font-family: Arial, sans-serif;
         }
+
         .section {
             display: none;
         }
+
         .active {
             display: block;
         }
@@ -47,6 +50,7 @@
             font-size: 16px;
             cursor: pointer;
         }
+
         #loadingScreen {
             position: fixed;
             top: 0;
@@ -79,156 +83,325 @@
 
         /* Animation keyframes */
         @keyframes fadeLoop {
-            0%, 100% {
+
+            0%,
+            100% {
                 opacity: 0;
             }
+
             50% {
                 opacity: 1;
             }
         }
     </style>
 
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
+    <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
     <script src="sprite_map.js"></script>
     <script src="background_list.js"></script>
     <script src="main.js">
     </script>
 </head>
+
 <body>
-<div id="loadingScreen">
-    <img src="assets/metaworld/hana1.webp" alt="Loading Image">
-    <div id="loadingText">Loading assets... Please wait</div>
-</div>
-<h1>Umineko Screenshot Generator</h1>
+    <main role="main">
+        <div class="container">
+            <div id="loadingScreen">
+                <img src="assets/metaworld/hana1.webp" alt="Loading Image">
+                <div id="loadingText">Loading assets... Please wait</div>
+            </div>
 
-<div id="dashboard">
-        <img id="selectedBackground" src="" alt="" class="selectedSprite">
-        <img id="selectedLeftSprite" src="" alt="" class="selectedSprite">
-        <img id="selectedCenterSprite" src="" alt="" class="selectedSprite">
-        <img id="selectedRightSprite" src="" alt="" class="selectedSprite">
-        <img id="selectedMetaLeftSprite" src="" alt="" class="selectedSprite">
-        <img id="selectedMetaCenterSprite" src="" alt="" class="selectedSprite">
-        <img id="selectedMetaRightSprite" src="" alt="" class="selectedSprite">
-</div>
+            <div class="row">
+                <div class="col text-center mt-3">
+                    <h1>Umineko Screenshot Generator</h1>
+                </div>
+                <div class="w-100 mb-3"></div>
+                <div class="col col-sm-4">
+                    PREVIEW
+                    <br><br>
+                    <!-- width = 800, height = 600 -->
+                    <canvas id="canvas" class="border w-100" style="aspect-ratio: 4/3;"></canvas>
+                    <br><br>
 
-<button class="button" id="backgroundSectionButton" onclick="toggleSection('backgroundSection')">Background</button>
-<button class="button" id="textSectionButton" onclick="toggleSection('textSection')">Text</button>
-<button class="button" id="leftSpriteSectionButton" onclick="toggleSection('leftSpriteSection')">Left Sprite</button>
-<button class="button" id="centerSpriteSectionButton" onclick="toggleSection('centerSpriteSection')">Center Sprite</button>
-<button class="button" id="rightSpriteSectionButton" onclick="toggleSection('rightSpriteSection')">Right Sprite</button>
-<button class="button" id="metaWorldLeftSectionButton" onclick="toggleSection('metaWorldLeftSection')">Meta World Left</button>
-<button class="button" id="metaWorldCenterSectionButton" onclick="toggleSection('metaWorldCenterSection')">Meta World Center</button>
-<button class="button" id="metaWorldRightSectionButton" onclick="toggleSection('metaWorldRightSection')">Meta World Right</button>
-<button class="button" id="customSprite0SectionButton" onclick="toggleSection('customSprite0Section')">Custom Sprite 0</button>
-<button class="button" id="customSprite1SectionButton" onclick="toggleSection('customSprite1Section')">Custom Sprite 1</button>
-<button class="button" id="addSpriteSectionButton" onclick="toggleSection('addSpriteSection')">Add Sprite</button>
-<button class="button" id="generateSectionButton" onclick="toggleSection('generateSection')">Generate</button>
+                    <!-- This button will export the screenshot to the local computer -->
+                    <button class="btn bg-success text-light">
+                        <i class="fa fa-download"></i> Export
+                    </button>
 
-<section id="backgroundSection" class="section">
-    <h2>Background Section</h2>
+                </div>
+                <div class="col">
+                    <ul class="nav nav-tabs nav-justified" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#bg" type="button"
+                                role="tab" aria-controls="background">Background</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#characters" type="button"
+                                role="tab" aria-controls="characters">Characters</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#text" type="button"
+                                role="tab" aria-controls="text">Text</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade active show" id="bg" role="tabpanel" aria-labelledby="bg-tab">
+                            <div class="row align-items-center mt-3">
+                                <div class="col">
+                                    <select name="bg-filter" id="bg-filter" class="form-control"></select>
+                                </div>
+                                <div class="col col-sm-1 text-right">
+                                    <button class="btn fa fa-check bg-success text-light" onclick="generate()"></button>
+                                </div>
+                                <div class="w-100 mb-3"></div>
+                                <div class="col text-center">
+                                    <div id="carousel-bg" class="carousel carousel-dark slide" data-bs-interval="false">
+                                        <div class="carousel-inner" id="backgroundsContainer">
+                                            <div class="carousel-item active">
+                                                <img src="assets/backgrounds/airport/air_in1a.bmp"
+                                                    style="height: 50vh;">
+                                            </div>
+                                        </div>
+                                        <button class="carousel-control-prev" type="button"
+                                            data-bs-target="#carousel-bg" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button"
+                                            data-bs-target="#carousel-bg" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="characters" role="tabpanel" aria-labelledby="characters-tab">
+                            <div class="row align-items-center mt-3">
+                                <div class="col">
+                                    Character
+                                    <select name="" id="" class="form-control">
+                                        <option value="">Featherine Augustus Aurora</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    Position
+                                    <select name="" id="" class="form-control">
+                                        <option value="left">Left</option>
+                                        <option value="right">Right</option>
+                                        <option value="center">Center</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    World
+                                    <select name="" id="" class="form-control">
+                                        <option value="normal">Normal</option>
+                                        <option value="meta">Meta</option>
+                                    </select>
+                                </div>
+                                <div class="col col-sm-1 text-right">
+                                    <button class="btn fa fa-check bg-success text-light" onclick="generate()"></button>
+                                </div>
+                                <div class="w-100 mb-3"></div>
+                                <div class="col text-center">
+                                    <div id="carousel-sprite" class="carousel carousel-dark slide"
+                                        data-bs-interval="false">
+                                        <div class="carousel-inner" id="leftImagesContainer">
+                                            <div class="carousel-item active">
+                                                <img src="assets/sprites/bernkastel/ber_a11_def1.webp"
+                                                    style="height: 50vh;">
+                                            </div>
+                                        </div>
+                                        <button class="carousel-control-prev" type="button"
+                                            data-bs-target="#carousel-sprite" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button"
+                                            data-bs-target="#carousel-sprite" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="text" role="tabpanel" aria-labelledby="text-tab">
+                            <div class="row align-items-center mt-3">
+                                <div class="col col-sm-2">
+                                    Truth
+                                </div>
+                                <div class="col">
+                                    <select name="text-filter" id="text-filter" class="form-control">
+                                        <option value="red">Red</option>
+                                        <option value="blue">Blue</option>
+                                        <option value="golden">Golden</option>
+                                    </select>
+                                </div>
+                                <div class="col col-sm-1 text-right">
+                                    <button class="btn fa fa-check bg-success text-light" onclick="generate()"></button>
+                                </div>
+                                <div class="w-100 mb-3"></div>
+                                <div class="col">
+                                    <textarea name="text-content" id="text-content" class="form-control" cols="30"
+                                        rows="10"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div id="backgroundsContainer"></div>
-    <script>
-        loadBackgrounds()
-    </script>
-</section>
 
-<div id="textSection" class="section">
-    <h2>Text Section</h2>
-    <textarea rows="4" cols="50" id="text"></textarea>
-    <p>Use [red] Text Here [/red]> for <span style="color:#ff0000">Red Truth!</span></p>
-    <p>Use [blue] Text Here [/blue]> for <span style="color:#0000ff">Blue Truth!</span></p>
-    <p>Use [golden] Text Here [/golden]> for <span style="color:#ffd700">Golden Truth!</span></p>
-</div>
 
-<section id="leftSpriteSection" class="section">
-    <h2>Choose Character:</h2>
-    <div id="leftThumbnailsContainer">
-    </div>
+            <!-- <div id="dashboard">
+                <img id="selectedBackground" src="" alt="" class="selectedSprite">
+                <img id="selectedLeftSprite" src="" alt="" class="selectedSprite">
+                <img id="selectedCenterSprite" src="" alt="" class="selectedSprite">
+                <img id="selectedRightSprite" src="" alt="" class="selectedSprite">
+                <img id="selectedMetaLeftSprite" src="" alt="" class="selectedSprite">
+                <img id="selectedMetaCenterSprite" src="" alt="" class="selectedSprite">
+                <img id="selectedMetaRightSprite" src="" alt="" class="selectedSprite">
+            </div>
 
-    <h2>Choose Variation:</h2>
-    <div id="leftImagesContainer">
+            <button class="button" id="backgroundSectionButton"
+                onclick="toggleSection('backgroundSection')">Background</button>
+            <button class="button" id="textSectionButton" onclick="toggleSection('textSection')">Text</button>
+            <button class="button" id="leftSpriteSectionButton" onclick="toggleSection('leftSpriteSection')">Left
+                Sprite</button>
+            <button class="button" id="centerSpriteSectionButton" onclick="toggleSection('centerSpriteSection')">Center
+                Sprite</button>
+            <button class="button" id="rightSpriteSectionButton" onclick="toggleSection('rightSpriteSection')">Right
+                Sprite</button>
+            <button class="button" id="metaWorldLeftSectionButton" onclick="toggleSection('metaWorldLeftSection')">Meta
+                World
+                Left</button>
+            <button class="button" id="metaWorldCenterSectionButton"
+                onclick="toggleSection('metaWorldCenterSection')">Meta
+                World Center</button>
+            <button class="button" id="metaWorldRightSectionButton"
+                onclick="toggleSection('metaWorldRightSection')">Meta World
+                Right</button>
+            <button class="button" id="customSprite0SectionButton"
+                onclick="toggleSection('customSprite0Section')">Custom Sprite
+                0</button>
+            <button class="button" id="customSprite1SectionButton"
+                onclick="toggleSection('customSprite1Section')">Custom Sprite
+                1</button>
+            <button class="button" id="addSpriteSectionButton" onclick="toggleSection('addSpriteSection')">Add
+                Sprite</button>
+            <button class="button" id="generateSectionButton"
+                onclick="toggleSection('generateSection')">Generate</button>
 
-    </div>
-    <script>
-        createThumbnails(spriteMap, "left", "leftThumbnailsContainer", "leftImagesContainer")
-    </script>
-</section>
+            <section id="backgroundSection" class="section">
+                <h2>Background Section</h2>
 
-<section id="centerSpriteSection" class="section">
-    <h2>Choose Character:</h2>
-    <div id="centerThumbnailsContainer">
-    </div>
+            <div id="backgroundsContainer"></div>
+            <script>
+                loadBackgrounds()
+            </script>
+            </section>
 
-    <h2>Choose Variation:</h2>
-    <div id="centerImagesContainer">
+            <div id="textSection" class="section">
+                <h2>Text Section</h2>
+                <textarea rows="4" cols="50" id="text"></textarea>
+                <p>Use [red] Text Here [/red]> for <span style="color:#ff0000">Red Truth!</span></p>
+                <p>Use [blue] Text Here [/blue]> for <span style="color:#0000ff">Blue Truth!</span></p>
+                <p>Use [golden] Text Here [/golden]> for <span style="color:#ffd700">Golden Truth!</span></p>
+            </div>
 
-    </div>
-    <script>
-        createThumbnails(spriteMap, "center", "centerThumbnailsContainer", "centerImagesContainer")
-    </script>
-</section>
+            <section id="leftSpriteSection" class="section">
+                <h2>Choose Character:</h2>
+                <div id="leftThumbnailsContainer">
+                </div>
 
-<section id="rightSpriteSection" class="section">
-    <h2>Choose Character:</h2>
-    <div id="rightThumbnailsContainer">
-    </div>
+                <h2>Choose Variation:</h2>
+                <div id="leftImagesContainer">
 
-    <h2>Choose Variation:</h2>
-    <div id="rightImagesContainer">
+                </div>
+                <script>
+                    createThumbnails(spriteMap, "left", "leftThumbnailsContainer", "leftImagesContainer")
+                </script>
+            </section>
 
-    </div>
-    <script>
-        createThumbnails(spriteMap, "right", "rightThumbnailsContainer", "rightImagesContainer")
-    </script>
-</section>
+            <section id="centerSpriteSection" class="section">
+                <h2>Choose Character:</h2>
+                <div id="centerThumbnailsContainer">
+                </div>
 
-<section id="metaWorldLeftSection" class="section">
-    <h2>Choose Character:</h2>
-    <div id="metaWorldLeftThumbnailsContainer">
-    </div>
+                <h2>Choose Variation:</h2>
+                <div id="centerImagesContainer">
 
-    <h2>Choose Variation:</h2>
-    <div id="metaWorldLeftImagesContainer">
+                </div>
+                <script>
+                    createThumbnails(spriteMap, "center", "centerThumbnailsContainer", "centerImagesContainer")
+                </script>
+            </section>
 
-    </div>
-    <script>
-        createThumbnails(spriteMap, "metaWorldLeft", "metaWorldLeftThumbnailsContainer", "metaWorldLeftImagesContainer")
-    </script>
-</section>
+            <section id="rightSpriteSection" class="section">
+                <h2>Choose Character:</h2>
+                <div id="rightThumbnailsContainer">
+                </div>
 
-<section id="metaWorldCenterSection" class="section">
-    <h2>Choose Character:</h2>
-    <div id="metaWorldCenterThumbnailsContainer">
-    </div>
+                <h2>Choose Variation:</h2>
+                <div id="rightImagesContainer">
 
-    <h2>Choose Variation:</h2>
-    <div id="metaWorldCenterImagesContainer">
+                </div>
+                <script>
+                    createThumbnails(spriteMap, "right", "rightThumbnailsContainer", "rightImagesContainer")
+                </script>
+            </section>
 
-    </div>
-    <script>
-        createThumbnails(spriteMap, "metaWorldCenter", "metaWorldCenterThumbnailsContainer", "metaWorldCenterImagesContainer")
-    </script>
-</section>
+            <section id="metaWorldLeftSection" class="section">
+                <h2>Choose Character:</h2>
+                <div id="metaWorldLeftThumbnailsContainer">
+                </div>
 
-<section id="metaWorldRightSection" class="section">
-    <h2>Choose Character:</h2>
-    <div id="metaWorldRightThumbnailsContainer">
-    </div>
+                <h2>Choose Variation:</h2>
+                <div id="metaWorldLeftImagesContainer">
 
-    <h2>Choose Variation:</h2>
-    <div id="metaWorldRightImagesContainer">
+                </div>
+                <script>
+                    createThumbnails(spriteMap, "metaWorldLeft", "metaWorldLeftThumbnailsContainer", "metaWorldLeftImagesContainer")
+                </script>
+            </section>
 
-    </div>
-    <script>
-        createThumbnails(spriteMap, "metaWorldRight", "metaWorldRightThumbnailsContainer", "metaWorldRightImagesContainer")
-    </script>
-</section>
+            <section id="metaWorldCenterSection" class="section">
+                <h2>Choose Character:</h2>
+                <div id="metaWorldCenterThumbnailsContainer">
+                </div>
 
-<div id="generateSection" class="section">
-    <h2>Generate</h2>
-    <button onclick="generate()">Generate</button>
-    <canvas id="canvas" width="800" height="600"></canvas>
-</div>
+                <h2>Choose Variation:</h2>
+                <div id="metaWorldCenterImagesContainer">
 
+                </div>
+                <script>
+                    createThumbnails(spriteMap, "metaWorldCenter", "metaWorldCenterThumbnailsContainer", "metaWorldCenterImagesContainer")
+                </script>
+            </section>
+
+            <section id="metaWorldRightSection" class="section">
+                <h2>Choose Character:</h2>
+                <div id="metaWorldRightThumbnailsContainer">
+                </div>
+
+                <h2>Choose Variation:</h2>
+                <div id="metaWorldRightImagesContainer">
+
+                </div>
+                <script>
+                    createThumbnails(spriteMap, "metaWorldRight", "metaWorldRightThumbnailsContainer", "metaWorldRightImagesContainer")
+                </script>
+            </section>
+
+            <div id="generateSection" class="section">
+                <h2>Generate</h2>
+                <button onclick="generate()">Generate</button>
+                <canvas id="canvas" width="800" height="600"></canvas>
+            </div> -->
+        </div>
+    </main>
 </body>
+
 </html>
