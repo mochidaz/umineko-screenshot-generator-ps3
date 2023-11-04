@@ -52,7 +52,9 @@
             height: 50vh;
         }
 
-        #imageContainer {
+        #imageContainer,
+        #carousel-bg,
+        #carousel-sprite {
             display: none;
         }
 
@@ -123,7 +125,26 @@
                         <div class="tab-pane fade active show" id="bg" role="tabpanel" aria-labelledby="bg-tab">
                             <div class="row align-items-center mt-3">
                                 <div class="col">
-                                    <select name="bg-filter" id="bg-filter" class="form-control"></select>
+                                    <select name="bg-filter" id="bg-filter" class="form-control">
+                                        <option value="none" selected>No background</option>
+                                        <option value="airport">Airport</option>
+                                        <option value="aquarium">Aquarium</option>
+                                        <option value="chapel">Chapel</option>
+                                        <option value="city">City</option>
+                                        <option value="forest">Forest</option>
+                                        <option value="garden">Garden</option>
+                                        <option value="guesthouse">Guesthouse</option>
+                                        <option value="kawhouse">Kumasawa's House</option>
+                                        <option value="kumhouse">Sabakichi's House</option>
+                                        <option value="mainbuilding">Main Building</option>
+                                        <option value="nanclinic">Nanjo Clinic</option>
+                                        <option value="restaurant">Restaurant</option>
+                                        <option value="rosehouse">Rosehouse</option>
+                                        <option value="school">School</option>
+                                        <option value="secrethouse">Secret House</option>
+                                        <option value="ship">Ship</option>
+                                        <option value="subway">Subway</option>
+                                    </select>
                                 </div>
                                 <div class="col col-sm-1 text-right">
                                     <button class="btn fa fa-check bg-success text-light" onclick="generate()"></button>
@@ -131,11 +152,7 @@
                                 <div class="w-100 mb-3"></div>
                                 <div class="col text-center">
                                     <div id="carousel-bg" class="carousel carousel-dark slide" data-bs-interval="false">
-                                        <div class="carousel-inner" id="backgroundContainer">
-                                            <div class="carousel-item active">
-                                                <img src="assets/backgrounds/airport/air_in1a.bmp">
-                                            </div>
-                                        </div>
+                                        <div class="carousel-inner" id="backgroundContainer"></div>
                                         <button class="carousel-control-prev" type="button"
                                             data-bs-target="#carousel-bg" data-bs-slide="prev">
                                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -151,11 +168,59 @@
                             </div>
                         </div>
                         <div class="tab-pane fade" id="characters" role="tabpanel" aria-labelledby="characters-tab">
+                            <div id="testing"></div>
                             <div class="row align-items-center mt-3">
                                 <div class="col">
                                     Character
-                                    <select name="" id="" class="form-control">
-                                        <option value="">Featherine Augustus Aurora</option>
+                                    <select id="character-filter" class="form-control">
+                                        <option value="none" selected>No character</option>
+                                        <option value="amakusa">Amakusa Juuza</option>
+                                        <option value="ange">Ange Ushiromiya</option>
+                                        <option value="asmo">Asmodeus</option>
+                                        <option value="battler">Battler Ushiromiya</option>
+                                        <option value="beatrice">Beatrice</option>
+                                        <option value="beelze">Beelzebub</option>
+                                        <option value="belphe">Belphegor</option>
+                                        <option value="bernkastel">Bernkastel</option>
+                                        <option value="chiester00">Chiester 00</option>
+                                        <option value="chiester41">Chiester 41</option>
+                                        <option value="chiester45">Chiester 45</option>
+                                        <option value="claire">Clair Vaux Bernardus</option>
+                                        <option value="cornelia">Cornelia</option>
+                                        <option value="dlanor">Dlanor A. Knox</option>
+                                        <option value="erika">Erika Furudo</option>
+                                        <option value="eva">Eva Ushiromiya</option>
+                                        <option value="evatrice">EVA-Beatrice</option>
+                                        <option value="featherine">Featherine Augustus Aurora</option>
+                                        <option value="furfur">Furfur</option>
+                                        <option value="gaap">Gaap</option>
+                                        <option value="genji">Genji Ronoue</option>
+                                        <option value="gertrude">Gertrude</option>
+                                        <option value="gohda">Gohda Toshiro</option>
+                                        <option value="hideyoshi">Hideyoshi Ushiromiya</option>
+                                        <option value="jessica">Jessica Ushiromiya</option>
+                                        <option value="kanon">Kanon</option>
+                                        <option value="kinzo">Kinzo Ushiromiya</option>
+                                        <option value="krauss">Krauss Ushiromiya</option>
+                                        <option value="kumasawa">Kumasawa Chiyo</option>
+                                        <option value="kyrie">Kyrie Ushiromiya</option>
+                                        <option value="lambda">Lambdadelta</option>
+                                        <option value="levia">Leviathan</option>
+                                        <option value="lion">Lion Ushiromiya</option>
+                                        <option value="luci">Lucifer</option>
+                                        <option value="mammon">Mammon</option>
+                                        <option value="maria">Maria Ushiromiya</option>
+                                        <option value="nanjo">Nanjo Terumasa</option>
+                                        <option value="natsuhi">Natsuhi Ushiromiya</option>
+                                        <option value="ronove">Ronove</option>
+                                        <option value="rosa">Rosa Ushiromiya</option>
+                                        <option value="rudolf">Rudolf Ushiromiya</option>
+                                        <option value="sakutaro">Sakutarou</option>
+                                        <option value="satan">Satan</option>
+                                        <option value="shannon">Shannon</option>
+                                        <option value="virgilia">Virgilia</option>
+                                        <option value="will">Willard H. Wright</option>
+                                        <option value="zepar">Zepar</option>
                                     </select>
                                 </div>
                                 <div class="col">
@@ -247,154 +312,6 @@
                     </div>
                 </div>
             </div>
-
-
-
-            <!-- <div id="dashboard">
-                <img id="selectedBackground" src="" alt="" class="selectedSprite">
-                <img id="selectedLeftSprite" src="" alt="" class="selectedSprite">
-                <img id="selectedCenterSprite" src="" alt="" class="selectedSprite">
-                <img id="selectedRightSprite" src="" alt="" class="selectedSprite">
-                <img id="selectedMetaLeftSprite" src="" alt="" class="selectedSprite">
-                <img id="selectedMetaCenterSprite" src="" alt="" class="selectedSprite">
-                <img id="selectedMetaRightSprite" src="" alt="" class="selectedSprite">
-            </div>
-
-            <button class="button" id="backgroundSectionButton"
-                onclick="toggleSection('backgroundSection')">Background</button>
-            <button class="button" id="textSectionButton" onclick="toggleSection('textSection')">Text</button>
-            <button class="button" id="leftSpriteSectionButton" onclick="toggleSection('leftSpriteSection')">Left
-                Sprite</button>
-            <button class="button" id="centerSpriteSectionButton" onclick="toggleSection('centerSpriteSection')">Center
-                Sprite</button>
-            <button class="button" id="rightSpriteSectionButton" onclick="toggleSection('rightSpriteSection')">Right
-                Sprite</button>
-            <button class="button" id="metaWorldLeftSectionButton" onclick="toggleSection('metaWorldLeftSection')">Meta
-                World
-                Left</button>
-            <button class="button" id="metaWorldCenterSectionButton"
-                onclick="toggleSection('metaWorldCenterSection')">Meta
-                World Center</button>
-            <button class="button" id="metaWorldRightSectionButton"
-                onclick="toggleSection('metaWorldRightSection')">Meta World
-                Right</button>
-            <button class="button" id="customSprite0SectionButton"
-                onclick="toggleSection('customSprite0Section')">Custom Sprite
-                0</button>
-            <button class="button" id="customSprite1SectionButton"
-                onclick="toggleSection('customSprite1Section')">Custom Sprite
-                1</button>
-            <button class="button" id="addSpriteSectionButton" onclick="toggleSection('addSpriteSection')">Add
-                Sprite</button>
-            <button class="button" id="generateSectionButton"
-                onclick="toggleSection('generateSection')">Generate</button>
-
-            <section id="backgroundSection" class="section">
-                <h2>Background Section</h2>
-
-            <div id="backgroundsContainer"></div>
-            <script>
-                loadBackgrounds()
-            </script>
-            </section>
-
-            <div id="textSection" class="section">
-                <h2>Text Section</h2>
-                <textarea rows="4" cols="50" id="text"></textarea>
-                <p>Use [red] Text Here [/red]> for <span style="color:#ff0000">Red Truth!</span></p>
-                <p>Use [blue] Text Here [/blue]> for <span style="color:#0000ff">Blue Truth!</span></p>
-                <p>Use [golden] Text Here [/golden]> for <span style="color:#ffd700">Golden Truth!</span></p>
-            </div>
-
-            <section id="leftSpriteSection" class="section">
-                <h2>Choose Character:</h2>
-                <div id="leftThumbnailsContainer">
-                </div>
-
-                <h2>Choose Variation:</h2>
-                <div id="leftImagesContainer">
-
-                </div>
-                <script>
-                    createThumbnails(spriteMap, "left", "leftThumbnailsContainer", "leftImagesContainer")
-                </script>
-            </section>
-
-            <section id="centerSpriteSection" class="section">
-                <h2>Choose Character:</h2>
-                <div id="centerThumbnailsContainer">
-                </div>
-
-                <h2>Choose Variation:</h2>
-                <div id="centerImagesContainer">
-
-                </div>
-                <script>
-                    createThumbnails(spriteMap, "center", "centerThumbnailsContainer", "centerImagesContainer")
-                </script>
-            </section>
-
-            <section id="rightSpriteSection" class="section">
-                <h2>Choose Character:</h2>
-                <div id="rightThumbnailsContainer">
-                </div>
-
-                <h2>Choose Variation:</h2>
-                <div id="rightImagesContainer">
-
-                </div>
-                <script>
-                    createThumbnails(spriteMap, "right", "rightThumbnailsContainer", "rightImagesContainer")
-                </script>
-            </section>
-
-            <section id="metaWorldLeftSection" class="section">
-                <h2>Choose Character:</h2>
-                <div id="metaWorldLeftThumbnailsContainer">
-                </div>
-
-                <h2>Choose Variation:</h2>
-                <div id="metaWorldLeftImagesContainer">
-
-                </div>
-                <script>
-                    createThumbnails(spriteMap, "metaWorldLeft", "metaWorldLeftThumbnailsContainer", "metaWorldLeftImagesContainer")
-                </script>
-            </section>
-
-            <section id="metaWorldCenterSection" class="section">
-                <h2>Choose Character:</h2>
-                <div id="metaWorldCenterThumbnailsContainer">
-                </div>
-
-                <h2>Choose Variation:</h2>
-                <div id="metaWorldCenterImagesContainer">
-
-                </div>
-                <script>
-                    createThumbnails(spriteMap, "metaWorldCenter", "metaWorldCenterThumbnailsContainer", "metaWorldCenterImagesContainer")
-                </script>
-            </section>
-
-            <section id="metaWorldRightSection" class="section">
-                <h2>Choose Character:</h2>
-                <div id="metaWorldRightThumbnailsContainer">
-                </div>
-
-                <h2>Choose Variation:</h2>
-                <div id="metaWorldRightImagesContainer">
-
-                </div>
-                <script>
-                    createThumbnails(spriteMap, "metaWorldRight", "metaWorldRightThumbnailsContainer", "metaWorldRightImagesContainer")
-                </script>
-            </section>
-
-            <div id="generateSection" class="section">
-                <h2>Generate</h2>
-                <button onclick="generate()">Generate</button>
-                <canvas id="canvas" width="800" height="600"></canvas>
-            </div> -->
         </div>
     </main>
 </body>

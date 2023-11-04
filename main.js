@@ -251,11 +251,10 @@ function generate() {
     });
 
   ctx.filter = "brightness(55%)";
-  let bgImage = new Image();
-  bgImage.src = document.querySelector(
+  let bgImage = document.querySelector(
     "#backgroundContainer .carousel-item.active > img"
-  ).src;
-  ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+  );
+  if (bgImage) ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
 
   // Setup image
   const imageContainer = document.getElementById("imageContainer");
@@ -289,7 +288,7 @@ function generate() {
             case "right":
               ctx.drawImage(
                 child,
-                canvas.width * -0.13,
+                canvas.width * 0.41,
                 canvas.width * -0.05,
                 canvas.width * 0.75,
                 canvas.width * 0.6
@@ -298,7 +297,7 @@ function generate() {
             case "center":
               ctx.drawImage(
                 child,
-                canvas.width * -0.13,
+                canvas.width * 0.15,
                 canvas.width * -0.05,
                 canvas.width * 0.75,
                 canvas.width * 0.6
@@ -326,7 +325,7 @@ function generate() {
             case "right":
               ctx.drawImage(
                 child,
-                canvas.width * -0.13,
+                canvas.width * 0.41,
                 canvas.width * -0.05,
                 canvas.width * 0.75,
                 canvas.width * 0.6
@@ -335,7 +334,7 @@ function generate() {
             case "center":
               ctx.drawImage(
                 child,
-                canvas.width * -0.13,
+                canvas.width * 0.15,
                 canvas.width * -0.05,
                 canvas.width * 0.75,
                 canvas.width * 0.6
@@ -384,11 +383,11 @@ function downloadImage() {
     });
 
   ctx.filter = "brightness(55%)";
-  let bgImage = new Image();
-  bgImage.src = document.querySelector(
+
+  bgImage = document.querySelector(
     "#backgroundContainer .carousel-item.active > img"
-  ).src;
-  ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+  );
+  if (bgImage) ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
 
   // Setup image
   const imageContainer = document.getElementById("imageContainer");
@@ -624,32 +623,8 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
   }
 }
 
-// TODO: generate a list automatically
-function generateBackgroundList() {
-  const bgList = [
-    {
-      name: "Airport",
-      folder: "airport",
-    },
-    {
-      name: "Aquarium",
-      folder: "aquarium",
-    },
-  ];
-
-  const bgSelect = document.getElementById("bg-filter");
-  bgList.forEach((element) => {
-    let opt = document.createElement("option");
-    opt.value = element.folder;
-    opt.innerHTML = element.name;
-
-    bgSelect.appendChild(opt);
-  });
-}
-
 window.addEventListener("load", function () {
   document.getElementById("loadingScreen").style.display = "none";
-  generateBackgroundList();
 
   // Auto insert tag to text
   const truthButton = document.getElementsByClassName("truth");
@@ -670,4 +645,54 @@ window.addEventListener("load", function () {
         currentCursorPosition + `[${truthButton[i].value}]`.length;
     };
   }
+
+  // Add background image to carousel based on category
+  document.getElementById("bg-filter").addEventListener("change", function () {
+    const backgroundContainer = document.getElementById("backgroundContainer");
+    backgroundContainer.innerHTML = "";
+
+    if (this.value === "none") {
+      document.getElementById("carousel-bg").style.display = "none";
+    } else {
+      document.getElementById("carousel-bg").style.display = "block";
+
+      for (let i = 0; i < backgroundList[this.value].length; i++) {
+        const carouselItem = document.createElement("div");
+        carouselItem.classList.add("carousel-item");
+        if (i === 0) carouselItem.classList.add("active");
+
+        const bgImage = new Image();
+
+        bgImage.src = backgroundList[this.value][i].background;
+        carouselItem.appendChild(bgImage);
+        backgroundContainer.appendChild(carouselItem);
+      }
+    }
+  });
+
+  // Add sprite image to carousel based on character
+  document
+    .getElementById("character-filter")
+    .addEventListener("change", function () {
+      const spriteContainer = document.getElementById("spriteContainer");
+      spriteContainer.innerHTML = "";
+
+      if (this.value === "none") {
+        document.getElementById("carousel-sprite").style.display = "none";
+      } else {
+        document.getElementById("carousel-sprite").style.display = "block";
+
+        for (let i = 0; i < spriteMap[this.value].length; i++) {
+          const carouselItem = document.createElement("div");
+          carouselItem.classList.add("carousel-item");
+          if (i === 0) carouselItem.classList.add("active");
+
+          const spriteImage = new Image();
+
+          spriteImage.src = spriteMap[this.value][i].sprite;
+          carouselItem.appendChild(spriteImage);
+          spriteContainer.appendChild(carouselItem);
+        }
+      }
+    });
 });
