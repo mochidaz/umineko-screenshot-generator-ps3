@@ -31,7 +31,6 @@ function load_thumbnails(data) {
       data[key].length > 0
     ) {
       const firstImagePath = data[key][0].thumbnail;
-      console.log(firstImagePath);
       thumbnail.push([key, firstImagePath]);
     }
   }
@@ -207,43 +206,40 @@ function loadBackgrounds() {
     imgElement.style.maxHeight = "300px";
     imgElement.style.margin = "5px";
     imgElement.style.border = "2px solid";
-    // imgElement.onclick = function () {
-    //   bg = backgroundMain.background;
-    //   const selected = document.getElementById("selectedBackground");
-    //   selected.src = background;
-    // };
 
     carouselItem.appendChild(imgElement);
     backgroundsContainer.appendChild(carouselItem);
   }
 }
 
+function generateImage() {
+  // Update current image to collection
+  const position = document.getElementById("position").value;
+  const world = document.getElementById("world").value;
+  let currentImage = document.querySelector(
+    `#imageContainer img[data-world='${world}'][data-position='${position}']`
+  );
+  const carouselItem = document.querySelector(
+    "#spriteContainer .carousel-item.active img"
+  );
+
+  if (carouselItem) {
+    currentImage.src = carouselItem.src;
+    currentImage.dataset.show = "true";
+  } else currentImage.dataset.show = "false";
+
+  // Generate preview
+  generate();
+}
+
 function generate() {
-  const textOverlay = document.getElementById("text-overlay");
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const background = new Image();
-  let bg = document.querySelector(".carousel-item.active > img").src;
-
-  background.src = bg;
-  const leftImage = new Image();
-  leftImage.src = left;
-  const rightImage = new Image();
-  rightImage.src = right;
-  const centerImage = new Image();
-  centerImage.src = center;
-
-  const metaLeftImage = new Image();
-  metaLeftImage.src = metaLeft;
-  const metaRightImage = new Image();
-  metaRightImage.src = metaRight;
-  const metaCenterImage = new Image();
-  metaCenterImage.src = metaCenter;
 
   let font = new FontFace(
     "SazanamiGothic",
-    "url(./assets/font/sazanami-gothic.ttf)"
+    "url(./assets/fonts/sazanami-gothic.ttf)"
   );
   font
     .load()
@@ -254,173 +250,293 @@ function generate() {
       console.log(error);
     });
 
-  const metaOverlayPath = "./assets/metaworld/hana1.webp";
+  ctx.filter = "brightness(55%)";
+  let bgImage = new Image();
+  bgImage.src = document.querySelector(
+    "#backgroundContainer .carousel-item.active > img"
+  ).src;
+  ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
 
-  const metaOverlay = new Image();
-  metaOverlay.src = metaOverlayPath;
-
-  console.log(bg);
-  Promise.all([
-    loadImageAsync(bg),
-    loadImageAsync(left),
-    loadImageAsync(center),
-    loadImageAsync(right),
-    loadImageAsync(metaLeft),
-    loadImageAsync(metaCenter),
-    loadImageAsync(metaRight),
-    loadImageAsync(metaOverlayPath),
-  ])
-    .then(
-      ([
-        bgImage,
-        leftImage,
-        centerImage,
-        rightImage,
-        metaLeftImage,
-        metaCenterImage,
-        metaRightImage,
-        metaOverlay,
-      ]) => {
-        console.log(bgImage);
-        ctx.filter = "brightness(55%)";
-
-        let meta = false;
-        const scaleFactor = 1.2;
-
-        if (metaLeftImage || metaRightImage || metaCenterImage) {
-          meta = true;
-        }
-
-        if (meta) {
-          ctx.filter = "brightness(30%)";
-        }
-
-        ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
-        console.log(ctx);
-
-        if (leftImage) {
-          let adder = 400;
-          const leftImageWidth = leftImage.width * scaleFactor;
-          const leftImageHeight = leftImage.height * scaleFactor;
-          if (leftImage.width > 500) {
-            adder = 300;
-          } else if (leftImage.width < 400) {
-            adder = 425;
-          }
-          const leftImageX = canvas.width - leftImageWidth - adder;
-          const leftImageY = canvas.height - leftImageHeight + 60;
-          ctx.drawImage(
-            leftImage,
-            leftImageX,
-            leftImageY,
-            leftImageWidth,
-            leftImageHeight
-          );
-        }
-
-        if (rightImage) {
-          const rightImageWidth = rightImage.width * scaleFactor;
-          const rightImageHeight = rightImage.height * scaleFactor;
-          let adder = 150;
-          if (rightImageWidth < 500) {
-            adder = 50;
-          }
-          //const rightImageX = (canvas.width - rightImageWidth) + adder;
-          const rightImageX = canvas.width - rightImageWidth / 2 - 170;
-          const rightImageY = canvas.height - rightImageHeight + 50;
-          ctx.drawImage(
-            rightImage,
-            rightImageX,
-            rightImageY,
-            rightImageWidth,
-            rightImageHeight
-          );
-        }
-
-        if (centerImage) {
-          const centerImageWidth = centerImage.width * scaleFactor;
-          const centerImageHeight = centerImage.height * scaleFactor;
-          const centerImageX = canvas.width / 2 - centerImageWidth / 2;
-          const centerImageY = canvas.height - centerImageHeight + 70;
-          ctx.drawImage(
-            centerImage,
-            centerImageX,
-            centerImageY,
-            centerImageWidth,
-            centerImageHeight
-          );
-        }
-
-        if (meta) {
-          ctx.filter = "brightness(55%)";
-          ctx.drawImage(metaOverlay, 0, 0, canvas.width, canvas.height);
-        }
-
-        if (metaLeftImage) {
-          const metaLeftImageWidth = metaLeftImage.width * scaleFactor;
-          const metaLeftImageHeight = metaLeftImage.height * scaleFactor;
-          const metaLeftImageX = canvas.width - metaLeftImageWidth - 400;
-          const metaLeftImageY = canvas.height - metaLeftImageHeight + 60;
-          ctx.drawImage(
-            metaLeftImage,
-            metaLeftImageX,
-            metaLeftImageY,
-            metaLeftImageWidth,
-            metaLeftImageHeight
-          );
-        }
-
-        if (metaRightImage) {
-          const metaRightImageWidth = metaRightImage.width * scaleFactor;
-          const metaRightImageHeight = metaRightImage.height * scaleFactor;
-          const metaRightImageX = canvas.width - metaRightImageWidth / 2 - 170;
-          const metaRightImageY = canvas.height - metaRightImageHeight + 50;
-          ctx.drawImage(
-            metaRightImage,
-            metaRightImageX,
-            metaRightImageY,
-            metaRightImageWidth,
-            metaRightImageHeight
-          );
-        }
-
-        if (metaCenterImage) {
-          const metaCenterImageWidth = metaCenterImage.width * scaleFactor;
-          const metaCenterImageHeight = metaCenterImage.height * scaleFactor;
-          const metaCenterImageX = canvas.width / 2 - metaCenterImageWidth / 2;
-          const metaCenterImageY = canvas.height - metaCenterImageHeight + 70;
-          ctx.drawImage(
-            metaCenterImage,
-            metaCenterImageX,
-            metaCenterImageY,
-            metaCenterImageWidth,
-            metaCenterImageHeight
-          );
-        }
-
-        ctx.globalAlpha = 1;
-        ctx.filter = "none";
-        ctx.font = "26px SazanamiGothic";
-
-        const textX = 50;
-        const textY = 70;
-        const maxTextWidth = 750;
-        const lineHeight = 40;
-        const text = document.getElementById("text").value;
-        ctx.textShadow = "2px 2px #000000";
-        wrapText(ctx, text, textX, textY, maxTextWidth, lineHeight);
-        const dataURL = ctx.toDataURL("image/png");
-        const downloadLink = document.createElement("a");
-        downloadLink.href = dataURL;
-        downloadLink.download = "image.png";
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-      }
+  // Setup image
+  const imageContainer = document.getElementById("imageContainer");
+  let meta = false;
+  if (
+    document.querySelector(
+      "#imageContainer img[data-world='meta'][data-show='true']"
     )
-    .catch((error) => {
+  ) {
+    meta = true;
+  }
+
+  for (const child of imageContainer.children) {
+    if (child.dataset.show === "true") {
+      switch (child.dataset.world) {
+        case "normal":
+        default:
+          if (meta) ctx.filter = "brightness(30%)";
+
+          switch (child.dataset.position) {
+            case "left":
+            default:
+              ctx.drawImage(
+                child,
+                canvas.width * -0.13,
+                canvas.width * -0.05,
+                canvas.width * 0.75,
+                canvas.width * 0.6
+              );
+              break;
+            case "right":
+              ctx.drawImage(
+                child,
+                canvas.width * -0.13,
+                canvas.width * -0.05,
+                canvas.width * 0.75,
+                canvas.width * 0.6
+              );
+              break;
+            case "center":
+              ctx.drawImage(
+                child,
+                canvas.width * -0.13,
+                canvas.width * -0.05,
+                canvas.width * 0.75,
+                canvas.width * 0.6
+              );
+              break;
+          }
+          break;
+        case "meta":
+          let metaOverlay = new Image();
+          metaOverlay.src = "./assets/metaworld/hana1.webp";
+          ctx.drawImage(metaOverlay, 0, 0, canvas.width, canvas.height);
+
+          ctx.filter = "brightness(55%)";
+          switch (child.dataset.position) {
+            case "left":
+              ctx.drawImage(
+                child,
+                canvas.width * -0.25,
+                canvas.width * -0.05,
+                canvas.width * 0.75,
+                canvas.width * 0.6
+              );
+            default:
+              break;
+            case "right":
+              ctx.drawImage(
+                child,
+                canvas.width * -0.13,
+                canvas.width * -0.05,
+                canvas.width * 0.75,
+                canvas.width * 0.6
+              );
+              break;
+            case "center":
+              ctx.drawImage(
+                child,
+                canvas.width * -0.13,
+                canvas.width * -0.05,
+                canvas.width * 0.75,
+                canvas.width * 0.6
+              );
+              break;
+          }
+          break;
+      }
+    }
+  }
+
+  ctx.globalAlpha = 1;
+  ctx.filter = "none";
+
+  // Set font size to be responsive with window
+  ctx.font = (8 * 100) / window.innerHeight + "vh SazanamiGothic";
+  const textX = canvas.width * 0.065;
+  const textY = canvas.width * 0.055;
+  const maxTextWidth = canvas.width - canvas.width * 0.065 * 2;
+  const lineHeight = canvas.width * 0.034;
+  const text = document.getElementById("text-content").value ?? "";
+  ctx.textShadow = "2px 2px #000000";
+  wrapText(ctx, text, textX, textY, maxTextWidth, lineHeight);
+}
+
+function downloadImage() {
+  // Create a new image with concrete setting
+  const canvas = document.createElement("canvas");
+  canvas.width = 800;
+  canvas.height = 600;
+
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  let font = new FontFace(
+    "SazanamiGothic",
+    "url(./assets/fonts/sazanami-gothic.ttf)"
+  );
+  font
+    .load()
+    .then(function (loaded_face) {
+      document.fonts.add(loaded_face);
+    })
+    .catch(function (error) {
       console.log(error);
     });
+
+  ctx.filter = "brightness(55%)";
+  let bgImage = new Image();
+  bgImage.src = document.querySelector(
+    "#backgroundContainer .carousel-item.active > img"
+  ).src;
+  ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+
+  // Setup image
+  const imageContainer = document.getElementById("imageContainer");
+  let meta = false;
+  if (
+    document.querySelector(
+      "#imageContainer img[data-world='meta'][data-show='true']"
+    )
+  ) {
+    meta = true;
+  }
+  const scaleFactor = 1.2;
+  let adder;
+
+  for (const child of imageContainer.children) {
+    if (child.dataset.show === "true") {
+      switch (child.dataset.world) {
+        case "normal":
+        default:
+          if (meta) ctx.filter = "brightness(30%)";
+
+          switch (child.dataset.position) {
+            case "left":
+            default:
+              adder = 400;
+              const leftImageWidth = child.width * scaleFactor;
+              const leftImageHeight = child.height * scaleFactor;
+              if (child.width > 500) {
+                adder = 300;
+              } else if (child.width < 400) {
+                adder = 425;
+              }
+              const leftImageX = canvas.width - leftImageWidth - adder;
+              const leftImageY = canvas.height - leftImageHeight + 60;
+              ctx.drawImage(
+                child,
+                leftImageX,
+                leftImageY,
+                leftImageWidth,
+                leftImageHeight
+              );
+              break;
+            case "right":
+              const rightImageWidth = child.width * scaleFactor;
+              const rightImageHeight = child.height * scaleFactor;
+              adder = 150;
+              if (rightImageWidth < 500) {
+                adder = 50;
+              }
+              const rightImageX = canvas.width - rightImageWidth / 2 - 170;
+              const rightImageY = canvas.height - rightImageHeight + 50;
+              ctx.drawImage(
+                child,
+                rightImageX,
+                rightImageY,
+                rightImageWidth,
+                rightImageHeight
+              );
+              break;
+            case "center":
+              const centerImageWidth = child.width * scaleFactor;
+              const centerImageHeight = child.height * scaleFactor;
+              const centerImageX = canvas.width / 2 - centerImageWidth / 2;
+              const centerImageY = canvas.height - centerImageHeight + 70;
+              ctx.drawImage(
+                child,
+                centerImageX,
+                centerImageY,
+                centerImageWidth,
+                centerImageHeight
+              );
+              break;
+          }
+          break;
+        case "meta":
+          let metaOverlay = new Image();
+          metaOverlay.src = "./assets/metaworld/hana1.webp";
+          ctx.drawImage(metaOverlay, 0, 0, canvas.width, canvas.height);
+
+          ctx.filter = "brightness(55%)";
+          switch (child.dataset.position) {
+            case "left":
+              const metaLeftImageWidth = child.width * scaleFactor;
+              const metaLeftImageHeight = child.height * scaleFactor;
+              const metaLeftImageX = canvas.width - metaLeftImageWidth - 400;
+              const metaLeftImageY = canvas.height - metaLeftImageHeight + 60;
+              ctx.drawImage(
+                child,
+                metaLeftImageX,
+                metaLeftImageY,
+                metaLeftImageWidth,
+                metaLeftImageHeight
+              );
+            default:
+              break;
+            case "right":
+              const metaRightImageWidth = child.width * scaleFactor;
+              const metaRightImageHeight = child.height * scaleFactor;
+              const metaRightImageX =
+                canvas.width - metaRightImageWidth / 2 - 170;
+              const metaRightImageY = canvas.height - metaRightImageHeight + 50;
+              ctx.drawImage(
+                child,
+                metaRightImageX,
+                metaRightImageY,
+                metaRightImageWidth,
+                metaRightImageHeight
+              );
+              break;
+            case "center":
+              const metaCenterImageWidth = child.width * scaleFactor;
+              const metaCenterImageHeight = child.height * scaleFactor;
+              const metaCenterImageX =
+                canvas.width / 2 - metaCenterImageWidth / 2;
+              const metaCenterImageY =
+                canvas.height - metaCenterImageHeight + 70;
+              ctx.drawImage(
+                child,
+                metaCenterImageX,
+                metaCenterImageY,
+                metaCenterImageWidth,
+                metaCenterImageHeight
+              );
+              break;
+          }
+          break;
+      }
+    }
+  }
+
+  ctx.globalAlpha = 1;
+  ctx.filter = "none";
+
+  ctx.font = "26px SazanamiGothic";
+  const textX = 50;
+  const textY = 70;
+  const maxTextWidth = 750;
+  const lineHeight = 40;
+  const text = document.getElementById("text-content").value ?? "";
+  ctx.textShadow = "2px 2px #000000";
+  wrapText(ctx, text, textX, textY, maxTextWidth, lineHeight);
+  const dataURL = canvas.toDataURL("image/png");
+  const downloadLink = document.createElement("a");
+  downloadLink.href = dataURL;
+  downloadLink.download = "image.png";
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
 }
 
 function loadImageAsync(url) {
@@ -534,4 +650,24 @@ function generateBackgroundList() {
 window.addEventListener("load", function () {
   document.getElementById("loadingScreen").style.display = "none";
   generateBackgroundList();
+
+  // Auto insert tag to text
+  const truthButton = document.getElementsByClassName("truth");
+  for (let i = 0; i < truthButton.length; i++) {
+    truthButton[i].onclick = function () {
+      const textarea = document.getElementById("text-content");
+      const currentCursorPosition = textarea.selectionEnd;
+      const currentTextareaValue = textarea.value;
+
+      // Add new tag
+      textarea.value = `${currentTextareaValue}[${truthButton[i].value}][/${truthButton[i].value}]`;
+
+      // Focus the cursor to the textarea
+      textarea.focus();
+
+      // Move the cursor to inside the newly added tag
+      textarea.selectionEnd =
+        currentCursorPosition + `[${truthButton[i].value}]`.length;
+    };
+  }
 });

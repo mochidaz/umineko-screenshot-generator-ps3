@@ -9,46 +9,9 @@
             font-family: Arial, sans-serif;
         }
 
-        .section {
-            display: none;
-        }
-
-        .active {
-            display: block;
-        }
-
-        .activeButton {
-            background-color: darkred !important;
-        }
-
-        #generateSection {
-            position: relative;
-        }
-
         @font-face {
             font-family: SazanamiGothic;
             src: url("assets/fonts/sazanami-gothic.ttf");
-        }
-
-        .selectedSprite {
-            display: inline-block;
-            top: 0;
-            left: 0;
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            object-position: center center;
-            border: 2px solid;
-            margin-bottom: 5px;
-        }
-
-        .button {
-            background-color: #8B4513;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
         }
 
         #loadingScreen {
@@ -79,6 +42,18 @@
             transform: translate(-50%, -50%);
             opacity: 0;
             animation: fadeLoop 2s infinite;
+        }
+
+        #canvas {
+            aspect-ratio: 4/3;
+        }
+
+        .carousel-item>img {
+            height: 50vh;
+        }
+
+        #imageContainer {
+            display: none;
         }
 
         /* Animation keyframes */
@@ -121,11 +96,10 @@
                     PREVIEW
                     <br><br>
                     <!-- width = 800, height = 600 -->
-                    <canvas id="canvas" class="border w-100" style="aspect-ratio: 4/3;"></canvas>
+                    <canvas id="canvas" class="border w-100"></canvas>
                     <br><br>
 
-                    <!-- This button will export the screenshot to the local computer -->
-                    <button class="btn bg-success text-light">
+                    <button class="btn bg-success text-light" onclick="downloadImage()">
                         <i class="fa fa-download"></i> Export
                     </button>
 
@@ -157,10 +131,9 @@
                                 <div class="w-100 mb-3"></div>
                                 <div class="col text-center">
                                     <div id="carousel-bg" class="carousel carousel-dark slide" data-bs-interval="false">
-                                        <div class="carousel-inner" id="backgroundsContainer">
+                                        <div class="carousel-inner" id="backgroundContainer">
                                             <div class="carousel-item active">
-                                                <img src="assets/backgrounds/airport/air_in1a.bmp"
-                                                    style="height: 50vh;">
+                                                <img src="assets/backgrounds/airport/air_in1a.bmp">
                                             </div>
                                         </div>
                                         <button class="carousel-control-prev" type="button"
@@ -187,30 +160,38 @@
                                 </div>
                                 <div class="col">
                                     Position
-                                    <select name="" id="" class="form-control">
+                                    <select id="position" class="form-control">
                                         <option value="left">Left</option>
-                                        <option value="right">Right</option>
                                         <option value="center">Center</option>
+                                        <option value="right">Right</option>
                                     </select>
                                 </div>
                                 <div class="col">
                                     World
-                                    <select name="" id="" class="form-control">
+                                    <select id="world" class="form-control">
                                         <option value="normal">Normal</option>
                                         <option value="meta">Meta</option>
                                     </select>
                                 </div>
                                 <div class="col col-sm-1 text-right">
-                                    <button class="btn fa fa-check bg-success text-light" onclick="generate()"></button>
+                                    <div id="imageContainer">
+                                        <img src="" data-show="false" data-world="normal" data-position="left">
+                                        <img src="" data-show="false" data-world="normal" data-position="center">
+                                        <img src="" data-show="false" data-world="normal" data-position="right">
+                                        <img src="" data-show="false" data-world="meta" data-position="left">
+                                        <img src="" data-show="false" data-world="meta" data-position="center">
+                                        <img src="" data-show="false" data-world="meta" data-position="right">
+                                    </div>
+                                    <button class="btn fa fa-check bg-success text-light"
+                                        onclick="generateImage()"></button>
                                 </div>
                                 <div class="w-100 mb-3"></div>
                                 <div class="col text-center">
                                     <div id="carousel-sprite" class="carousel carousel-dark slide"
                                         data-bs-interval="false">
-                                        <div class="carousel-inner" id="leftImagesContainer">
+                                        <div class="carousel-inner" id="spriteContainer">
                                             <div class="carousel-item active">
-                                                <img src="assets/sprites/featherine/fea_a11_def1.webp"
-                                                    style="height: 50vh;">
+                                                <img src="assets/sprites/featherine/fea_a11_def1.webp">
                                             </div>
                                         </div>
                                         <button class="carousel-control-prev" type="button"
@@ -232,20 +213,34 @@
                                 <div class="col col-sm-2">
                                     Truth
                                 </div>
-                                <div class="col">
-                                    <select name="text-filter" id="text-filter" class="form-control">
-                                        <option value="red">Red</option>
-                                        <option value="blue">Blue</option>
-                                        <option value="golden">Golden</option>
-                                    </select>
+                                <div class="col btn-group">
+                                    <button type="button" value="red"
+                                        class="truth btn bg-danger text-light">Red</button>
+                                    <button type="button" value="blue"
+                                        class="truth btn bg-info text-light">Blue</button>
+                                    <button type="button" value="golden" class="truth btn bg-warning">Golden</button>
                                 </div>
                                 <div class="col col-sm-1 text-right">
                                     <button class="btn fa fa-check bg-success text-light" onclick="generate()"></button>
                                 </div>
                                 <div class="w-100 mb-3"></div>
                                 <div class="col">
+                                    <div class="alert alert-info">
+                                        For colored texts, you can use the following tags:
+                                        <ul>
+                                            <li>[red]<span class="text-danger">This text is red</span>[/red]</li>
+                                            <li>[blue]<span class="text-info">This text is blue</span>[/blue]</li>
+                                            <li>[golden]<span class="text-warning">This text is golden</span>[/golden]
+                                            </li>
+                                        </ul>
+                                        Please type the tags you wish to use or generate the tag by clicking the
+                                        corresponding button.
+                                    </div>
+                                </div>
+                                <div class="w-100"></div>
+                                <div class="col">
                                     <textarea name="text-content" id="text-content" class="form-control" cols="30"
-                                        rows="10"></textarea>
+                                        rows="7"></textarea>
                                 </div>
                             </div>
                         </div>
