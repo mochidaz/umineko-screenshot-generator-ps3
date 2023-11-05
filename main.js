@@ -452,6 +452,12 @@ window.addEventListener("load", function () {
   document
     .getElementById("character-filter")
     .addEventListener("change", function () {
+      let spriteList = document.getElementById("sprite-list");
+
+      while (spriteList.firstChild) {
+        spriteList.removeChild(spriteList.lastChild);
+      }
+
       const spriteContainer = document.getElementById("spriteContainer");
       spriteContainer.innerHTML = "";
 
@@ -466,11 +472,30 @@ window.addEventListener("load", function () {
           if (i === 0) carouselItem.classList.add("active");
 
           const spriteImage = new Image();
+          const thumbnail = new Image();
 
+          thumbnail.src = spriteMap[this.value][i].thumbnail;
           spriteImage.src = spriteMap[this.value][i].sprite;
+
+          spriteList.appendChild(thumbnail);
           carouselItem.appendChild(spriteImage);
           spriteContainer.appendChild(carouselItem);
         }
       }
     });
+
+  document.getElementById("sprite-list").addEventListener("click", function (e) {
+    if (e.target.tagName === "IMG") {
+      const thumbnailImages = Array.from(this.querySelectorAll("img"));
+      const clickedThumbnail = e.target;
+      const index = thumbnailImages.indexOf(clickedThumbnail);
+
+      if (index >= 0) {
+        const carousel = new bootstrap.Carousel(
+            document.getElementById("carousel-sprite")
+        );
+        carousel.to(index);
+      }
+    }
+  });
 });
