@@ -56,7 +56,7 @@ function generate() {
   ) {
     meta = true;
   }
-  console.log("goal width", canvas.width * 0.6);
+
   for (const child of imageContainer.children) {
     if (child.dataset.show === "true") {
       switch (child.dataset.world) {
@@ -67,7 +67,6 @@ function generate() {
           switch (child.dataset.position) {
             case "left":
             default:
-              console.log(child.width, child.height);
               ctx.drawImage(
                 child,
                 canvas.width * -0.1,
