@@ -56,7 +56,7 @@ function generate() {
   ) {
     meta = true;
   }
-
+  console.log("goal width", canvas.width * 0.6);
   for (const child of imageContainer.children) {
     if (child.dataset.show === "true") {
       switch (child.dataset.world) {
@@ -67,12 +67,13 @@ function generate() {
           switch (child.dataset.position) {
             case "left":
             default:
+              console.log(child.width, child.height);
               ctx.drawImage(
                 child,
-                canvas.width * -0.13,
+                canvas.width * -0.1,
                 canvas.width * -0.05,
-                canvas.width * 0.75,
-                canvas.width * 0.6
+                child.width * 0.3,
+                child.height * 0.3
               );
               break;
             case "right":
@@ -80,8 +81,8 @@ function generate() {
                 child,
                 canvas.width * 0.41,
                 canvas.width * -0.05,
-                canvas.width * 0.75,
-                canvas.width * 0.6
+                child.width * 0.3,
+                child.height * 0.3
               );
               break;
             case "center":
@@ -89,8 +90,8 @@ function generate() {
                 child,
                 canvas.width * 0.15,
                 canvas.width * -0.05,
-                canvas.width * 0.75,
-                canvas.width * 0.6
+                child.width * 0.3,
+                child.height * 0.3
               );
               break;
           }
@@ -107,8 +108,8 @@ function generate() {
                 child,
                 canvas.width * -0.25,
                 canvas.width * -0.05,
-                canvas.width * 0.75,
-                canvas.width * 0.6
+                child.width * 0.3,
+                child.height * 0.3
               );
             default:
               break;
@@ -117,8 +118,8 @@ function generate() {
                 child,
                 canvas.width * 0.41,
                 canvas.width * -0.05,
-                canvas.width * 0.75,
-                canvas.width * 0.6
+                child.width * 0.3,
+                child.height * 0.3
               );
               break;
             case "center":
@@ -126,8 +127,8 @@ function generate() {
                 child,
                 canvas.width * 0.15,
                 canvas.width * -0.05,
-                canvas.width * 0.75,
-                canvas.width * 0.6
+                child.width * 0.3,
+                child.height * 0.3
               );
               break;
           }
@@ -484,18 +485,20 @@ window.addEventListener("load", function () {
       }
     });
 
-  document.getElementById("sprite-list").addEventListener("click", function (e) {
-    if (e.target.tagName === "IMG") {
-      const thumbnailImages = Array.from(this.querySelectorAll("img"));
-      const clickedThumbnail = e.target;
-      const index = thumbnailImages.indexOf(clickedThumbnail);
+  document
+    .getElementById("sprite-list")
+    .addEventListener("click", function (e) {
+      if (e.target.tagName === "IMG") {
+        const thumbnailImages = Array.from(this.querySelectorAll("img"));
+        const clickedThumbnail = e.target;
+        const index = thumbnailImages.indexOf(clickedThumbnail);
 
-      if (index >= 0) {
-        const carousel = new bootstrap.Carousel(
+        if (index >= 0) {
+          const carousel = new bootstrap.Carousel(
             document.getElementById("carousel-sprite")
-        );
-        carousel.to(index);
+          );
+          carousel.to(index);
+        }
       }
-    }
-  });
+    });
 });
