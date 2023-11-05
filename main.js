@@ -328,18 +328,6 @@ function downloadImage() {
   document.body.removeChild(downloadLink);
 }
 
-function loadImageAsync(url) {
-  return new Promise((resolve, reject) => {
-    if (url !== "") {
-      const image = new Image();
-      image.onload = () => resolve(image);
-      image.onerror = reject;
-      image.src = url;
-    } else {
-      resolve(null);
-    }
-  });
-}
 function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
   const colorCodes = {
     red: "#ff0000",
