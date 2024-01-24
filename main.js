@@ -7,211 +7,6 @@ var metaLeft = "";
 var metaCenter = "";
 var metaRight = "";
 
-function toggleSection(sectionId) {
-  const section = document.getElementById(sectionId);
-  if (section) {
-    const allSections = document.querySelectorAll(".section");
-    allSections.forEach((sec) => sec.classList.remove("active"));
-    section.classList.add("active");
-
-    const allButtons = document.querySelectorAll(".button");
-    allButtons.forEach((btn) => btn.classList.remove("activeButton"));
-    const button = document.getElementById(sectionId + "Button");
-    button.classList.add("activeButton");
-  }
-}
-
-function load_thumbnails(data) {
-  let thumbnail = [];
-
-  for (const key in data) {
-    if (
-      data.hasOwnProperty(key) &&
-      Array.isArray(data[key]) &&
-      data[key].length > 0
-    ) {
-      const firstImagePath = data[key][0].thumbnail;
-      thumbnail.push([key, firstImagePath]);
-    }
-  }
-
-  return thumbnail;
-}
-
-function load_images(key, position, id) {
-  const imagesContainer = document.getElementById(id);
-
-  while (imagesContainer.firstChild) {
-    imagesContainer.removeChild(imagesContainer.firstChild);
-  }
-
-  let currentSprite = spriteMap[key];
-
-  for (let i = 0; i < currentSprite.length; i++) {
-    const imgElement = document.createElement("img");
-    let selected;
-    let targetSprite;
-
-    imgElement.src = currentSprite[i].thumbnail;
-
-    imgElement.style.objectFit = "cover";
-    imgElement.style.objectPosition = "center center";
-    imgElement.style.width = "100px";
-    imgElement.style.height = "100px";
-    imgElement.style.margin = "5px";
-    imgElement.style.border = "2px solid";
-    imgElement.onclick = function () {
-      switch (position) {
-        case "left":
-          left = currentSprite[i].sprite;
-          selected = document.getElementById("selectedLeftSprite");
-          targetSprite = currentSprite[i].thumbnail;
-          break;
-        case "center":
-          center = currentSprite[i].sprite;
-          selected = document.getElementById("selectedCenterSprite");
-          targetSprite = currentSprite[i].thumbnail;
-          break;
-        case "right":
-          right = currentSprite[i].sprite;
-          selected = document.getElementById("selectedRightSprite");
-          targetSprite = currentSprite[i].thumbnail;
-          break;
-        case "metaWorldLeft":
-          metaLeft = currentSprite[i].sprite;
-          selected = document.getElementById("selectedMetaLeftSprite");
-          targetSprite = currentSprite[i].thumbnail;
-          break;
-        case "metaWorldCenter":
-          metaCenter = currentSprite[i].sprite;
-          selected = document.getElementById("selectedMetaCenterSprite");
-          targetSprite = currentSprite[i].thumbnail;
-          break;
-        case "metaWorldRight":
-          metaRight = currentSprite[i].sprite;
-          selected = document.getElementById("selectedMetaRightSprite");
-          targetSprite = currentSprite[i].thumbnail;
-          break;
-      }
-      if (selected) {
-        selected.src = targetSprite;
-      }
-    };
-
-    imagesContainer.appendChild(imgElement);
-  }
-}
-
-function createThumbnails(map, position, id, imageId) {
-  const thumbnailsContainer = document.getElementById(id);
-  const imageContainer = document.getElementById(imageId);
-
-  let sprites = load_thumbnails(map);
-
-  for (let i = 0; i < sprites.length; i++) {
-    const sprite = sprites[i];
-    const spriteName = sprite[0];
-    const spritePath = sprite[1];
-
-    const imgElement = document.createElement("img");
-
-    imgElement.src = spritePath;
-
-    imgElement.style.objectFit = "cover";
-    imgElement.style.objectPosition = "center center";
-    imgElement.style.width = "100px";
-    imgElement.style.height = "100px";
-    imgElement.style.margin = "5px";
-    imgElement.style.border = "2px solid";
-
-    imgElement.onclick = function () {
-      load_images(spriteName, position, imageId);
-    };
-
-    thumbnailsContainer.appendChild(imgElement);
-  }
-
-  let selected;
-
-  const imgElement = document.createElement("img");
-  imgElement.src = "";
-  imgElement.style.objectFit = "cover";
-  imgElement.style.objectPosition = "center center";
-  imgElement.style.width = "100px";
-  imgElement.style.height = "100px";
-  imgElement.style.margin = "5px";
-  imgElement.style.border = "2px solid";
-  imgElement.onclick = function () {
-    switch (position) {
-      case "left":
-        left = "";
-        selected = document.getElementById("selectedLeftSprite");
-        selected.src = "";
-        break;
-      case "center":
-        center = "";
-        selected = document.getElementById("selectedCenterSprite");
-        selected.src = "";
-        break;
-      case "right":
-        right = "";
-        selected = document.getElementById("selectedRightSprite");
-        selected.src = "";
-        break;
-      case "metaWorldLeft":
-        metaLeft = "";
-        selected = document.getElementById("selectedMetaLeftSprite");
-        selected.src = "";
-        break;
-      case "metaWorldCenter":
-        metaCenter = "";
-        selected = document.getElementById("selectedMetaCenterSprite");
-        selected.src = "";
-        break;
-      case "metaWorldRight":
-        metaRight = "";
-        selected = document.getElementById("selectedMetaRightSprite");
-        selected.src = "";
-        break;
-    }
-    while (imageContainer.firstChild) {
-      imageContainer.removeChild(imageContainer.firstChild);
-    }
-  };
-
-  thumbnailsContainer.appendChild(imgElement);
-}
-
-function loadBackgrounds() {
-  const backgroundsContainer = document.getElementById("backgroundsContainer");
-
-  for (let i = 0; i < backgroundList.length; i++) {
-    const backgroundMain = backgroundList[i];
-
-    const background = backgroundMain.background;
-
-    // Create carousel item
-    const carouselItem = document.createElement("div");
-    carouselItem.className = "carousel-item";
-
-    if (i === 0) carouselItem.classList.add("active");
-
-    const imgElement = document.createElement("img");
-
-    imgElement.src = background;
-
-    imgElement.style.objectFit = "cover";
-    imgElement.style.objectPosition = "center center";
-    imgElement.style.maxWidth = "300px";
-    imgElement.style.maxHeight = "300px";
-    imgElement.style.margin = "5px";
-    imgElement.style.border = "2px solid";
-
-    carouselItem.appendChild(imgElement);
-    backgroundsContainer.appendChild(carouselItem);
-  }
-}
-
 function generateImage() {
   // Update current image to collection
   const position = document.getElementById("position").value;
@@ -230,6 +25,48 @@ function generateImage() {
 
   // Generate preview
   generate();
+}
+
+function appendToList() {
+  const imageList = document.getElementById("usedCharactersList");
+  const backgroundList = document.getElementById("usedBackgroundList");
+  const usedImages = document.getElementById("imageContainer").children;
+  const usedBackgrounds = document.getElementById("backgroundContainer").children;
+
+  while (backgroundList.firstChild) {
+    backgroundList.removeChild(backgroundList.firstChild);
+  }
+  while (imageList.firstChild) {
+    imageList.removeChild(imageList.firstChild);
+  }
+
+  for (const child of usedImages) {
+    if (child.dataset.show === "true") {
+      const image = new Image();
+      image.src = child.src;
+      image.style.objectFit = "cover";
+      image.style.objectPosition = "center center";
+      image.style.width = "100px";
+      image.style.height = "100px";
+      image.style.margin = "5px";
+      image.style.border = "2px solid";
+      imageList.appendChild(image);
+    }
+  }
+
+  for (const child of usedBackgrounds) {
+    if (child.classList.contains("active")) {
+      const image = new Image();
+      image.src = child.children[0].src;
+      image.style.objectFit = "cover";
+      image.style.objectPosition = "center center";
+      image.style.width = "100px";
+      image.style.height = "100px";
+      image.style.margin = "5px";
+      image.style.border = "2px solid";
+      backgroundList.appendChild(image);
+    }
+  }
 }
 
 function generate() {
@@ -269,6 +106,7 @@ function generate() {
 
   for (const child of imageContainer.children) {
     if (child.dataset.show === "true") {
+      appendToList();
       switch (child.dataset.world) {
         case "normal":
         default:
@@ -361,6 +199,7 @@ function generate() {
 }
 
 function downloadImage() {
+  console.log("Downloading image...");
   // Create a new image with concrete setting
   const canvas = document.createElement("canvas");
   canvas.width = 800;
@@ -538,18 +377,6 @@ function downloadImage() {
   document.body.removeChild(downloadLink);
 }
 
-function loadImageAsync(url) {
-  return new Promise((resolve, reject) => {
-    if (url !== "") {
-      const image = new Image();
-      image.onload = () => resolve(image);
-      image.onerror = reject;
-      image.src = url;
-    } else {
-      resolve(null);
-    }
-  });
-}
 function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
   const colorCodes = {
     red: "#ff0000",
@@ -653,6 +480,10 @@ window.addEventListener("load", function () {
 
     if (this.value === "none") {
       document.getElementById("carousel-bg").style.display = "none";
+      const bcl = document.getElementById("usedBackgroundList")
+        while (bcl.firstChild) {
+            bcl.removeChild(bcl.firstChild);
+        }
     } else {
       document.getElementById("carousel-bg").style.display = "block";
 
@@ -664,6 +495,7 @@ window.addEventListener("load", function () {
         const bgImage = new Image();
 
         bgImage.src = backgroundList[this.value][i].background;
+        generateBackgroundVariation(backgroundList[this.value])
         carouselItem.appendChild(bgImage);
         backgroundContainer.appendChild(carouselItem);
       }
@@ -679,6 +511,10 @@ window.addEventListener("load", function () {
 
       if (this.value === "none") {
         document.getElementById("carousel-sprite").style.display = "none";
+        const ucl = document.getElementById("usedCharactersList")
+        while (ucl.firstChild) {
+          ucl.removeChild(ucl.firstChild);
+        }
       } else {
         document.getElementById("carousel-sprite").style.display = "block";
 
@@ -690,9 +526,84 @@ window.addEventListener("load", function () {
           const spriteImage = new Image();
 
           spriteImage.src = spriteMap[this.value][i].sprite;
+          generateSpriteVariation(spriteMap[this.value])
+
           carouselItem.appendChild(spriteImage);
           spriteContainer.appendChild(carouselItem);
         }
       }
     });
 });
+
+
+// generate a list of available sprite variations and if pressed, move carousel to that sprite
+function generateSpriteVariation(map) {
+  const characterContainer = document.getElementById("characterSelection");
+  characterContainer.innerHTML = "";
+  const character = document.getElementById("character-filter").value;
+  const sprite = map;
+  for (let i = 0; i < sprite.length; i++) {
+    const spriteImage = new Image();
+    spriteImage.src = sprite[i].thumbnail;
+    spriteImage.loading = "lazy";
+    spriteImage.style.objectFit = "cover";
+    spriteImage.style.objectPosition = "center center";
+    spriteImage.style.width = "100px";
+    spriteImage.style.height = "100px";
+    spriteImage.style.margin = "5px";
+    spriteImage.style.border = "2px solid";
+    spriteImage.onclick = function () {
+      moveCarouselToSprite(i);
+    };
+    characterContainer.appendChild(spriteImage);
+  }
+}
+
+// generate a list of available backgrounds and if pressed, move carousel to that background
+function generateBackgroundVariation(map) {
+  const backgroundContainer = document.getElementById("backgroundSelection");
+  backgroundContainer.innerHTML = "";
+  const background = document.getElementById("bg-filter").value;
+  const bg = map;
+for (let i = 0; i < bg.length; i++) {
+    const bgImage = new Image();
+    bgImage.src = bg[i].thumbnail;
+    bgImage.loading = "lazy";
+    bgImage.style.objectFit = "cover";
+    bgImage.style.objectPosition = "center center";
+    bgImage.style.width = "100px";
+    bgImage.style.height = "100px";
+    bgImage.style.margin = "5px";
+    bgImage.style.border = "2px solid";
+    bgImage.onclick = function () {
+      moveCarouselToBackground(i);
+    };
+    backgroundContainer.appendChild(bgImage);
+  }
+}
+
+function moveCarouselToBackground(bgIndex) {
+  const bgContainer = document.getElementById("backgroundContainer");
+  const carouselItems = bgContainer.querySelectorAll(".carousel-item");
+
+  carouselItems.forEach(item => {
+    item.classList.remove("active");
+  });
+
+  carouselItems[bgIndex].classList.add("active");
+
+  carouselItems[bgIndex].scrollIntoView({behavior: "smooth", block: "center"});
+}
+
+function moveCarouselToSprite(spriteIndex) {
+  const spriteContainer = document.getElementById("spriteContainer");
+  const carouselItems = spriteContainer.querySelectorAll(".carousel-item");
+
+  carouselItems.forEach(item => {
+    item.classList.remove("active");
+  });
+
+  carouselItems[spriteIndex].classList.add("active");
+
+  carouselItems[spriteIndex].scrollIntoView({behavior: "smooth", block: "center"});
+}
