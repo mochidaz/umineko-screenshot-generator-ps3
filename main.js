@@ -544,14 +544,15 @@ window.addEventListener("load", function () {
 
 
 // generate a list of available sprite variations and if pressed, move carousel to that sprite
-function generateSpriteVariation(map) {
+async function generateSpriteVariation(map) {
   const characterContainer = document.getElementById("characterSelection");
   characterContainer.innerHTML = "";
   const character = document.getElementById("character-filter").value;
   const sprite = map;
+
   for (let i = 0; i < sprite.length; i++) {
-    const spriteImage = new Image();
-    spriteImage.src = sprite[i].thumbnail;
+    const spriteImage = await loadImageAsync(sprite[i].thumbnail);
+
     spriteImage.loading = "lazy";
     spriteImage.style.objectFit = "cover";
     spriteImage.style.objectPosition = "center center";
@@ -559,33 +560,35 @@ function generateSpriteVariation(map) {
     spriteImage.style.height = "100px";
     spriteImage.style.margin = "5px";
     spriteImage.style.border = "2px solid";
+
     spriteImage.onclick = function () {
       moveCarouselToSprite(i);
     };
+
     characterContainer.appendChild(spriteImage);
   }
 }
 
 // generate a list of available backgrounds and if pressed, move carousel to that background
-function generateBackgroundVariation(map) {
+async function generateBackgroundVariation(map) {
   const backgroundContainer = document.getElementById("backgroundSelection");
   backgroundContainer.innerHTML = "";
   const background = document.getElementById("bg-filter").value;
   const bg = map;
-for (let i = 0; i < bg.length; i++) {
-    const bgImage = new Image();
-    bgImage.src = bg[i].thumbnail;
-    bgImage.loading = "lazy";
-    bgImage.style.objectFit = "cover";
-    bgImage.style.objectPosition = "center center";
-    bgImage.style.width = "100px";
-    bgImage.style.height = "100px";
-    bgImage.style.margin = "5px";
-    bgImage.style.border = "2px solid";
-    bgImage.onclick = function () {
-      moveCarouselToBackground(i);
-    };
-    backgroundContainer.appendChild(bgImage);
+  for (let i = 0; i < bg.length; i++) {
+      const bgImage = await loadImageAsync(bg[i].thumbnail);
+      bgImage.src = bg[i].thumbnail;
+      bgImage.loading = "lazy";
+      bgImage.style.objectFit = "cover";
+      bgImage.style.objectPosition = "center center";
+      bgImage.style.width = "100px";
+      bgImage.style.height = "100px";
+      bgImage.style.margin = "5px";
+      bgImage.style.border = "2px solid";
+      bgImage.onclick = function () {
+        moveCarouselToBackground(i);
+      };
+      backgroundContainer.appendChild(bgImage);
   }
 }
 
@@ -613,4 +616,13 @@ function moveCarouselToSprite(spriteIndex) {
   carouselItems[spriteIndex].classList.add("active");
 
   carouselItems[spriteIndex].scrollIntoView({behavior: "smooth", block: "center"});
+}
+
+async function loadImageAsync(src) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = reject;
+    image.src = src;
+  });
 }
