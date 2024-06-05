@@ -551,7 +551,6 @@ function generateSpriteVariation(map) {
   const sprite = map;
   for (let i = 0; i < sprite.length; i++) {
     const spriteImage = new Image();
-    spriteImage.src = sprite[i].thumbnail;
     spriteImage.loading = "lazy";
     spriteImage.style.objectFit = "cover";
     spriteImage.style.objectPosition = "center center";
@@ -559,6 +558,10 @@ function generateSpriteVariation(map) {
     spriteImage.style.height = "100px";
     spriteImage.style.margin = "5px";
     spriteImage.style.border = "2px solid";
+    spriteImage.classList.add("lazy");
+    spriteImage.setAttribute("data-srcset", sprite[i].thumbnail);
+    spriteImage.setAttribute("data-src", sprite[i].thumbnail);
+    spriteImage.src = sprite[i].thumbnail;
     spriteImage.onclick = function () {
       moveCarouselToSprite(i);
     };
