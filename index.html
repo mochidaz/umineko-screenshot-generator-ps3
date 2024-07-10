@@ -20,9 +20,21 @@
         #characterSelection {
             display: flex;
             flex-direction: row;
-            overflow-x: auto;
+            overflow-x: scroll;
             max-width: 100%;
             float: right;
+            &::-webkit-scrollbar {
+                -webkit-appearance: none;
+                height: 10px;
+            }
+            &::-webkit-scrollbar-thumb {
+                border-radius: 5px;
+                background-color: rgba(0,0,0,.5);
+                -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+            }
+            
+            scrollbar-width: thin;
+            scrollbar-color: rgba(0,0,0,.5) transparent;
         }
 
         #backgroundSelection {
@@ -213,7 +225,7 @@
                         <div class="tab-pane fade" id="characters" role="tabpanel" aria-labelledby="characters-tab">
                             <div id="testing"></div>
                             <div class="row align-items-center mt-3">
-                                <div class="col">
+                                <div class="col" onchange="resetState()">
                                     Character
                                     <select id="character-filter" class="form-control">
                                         <option value="none" selected>No character</option>

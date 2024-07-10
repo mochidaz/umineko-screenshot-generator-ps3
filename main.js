@@ -543,13 +543,49 @@ window.addEventListener("load", function () {
 });
 
 
-// generate a list of available sprite variations and if pressed, move carousel to that sprite
+const SPRITES_PER_CHUNK = 20;
+let currentSpriteChunk = 0;
+let allSpritesLoaded = false;
+let currentMap = null;
+
 function generateSpriteVariation(map) {
   const characterContainer = document.getElementById("characterSelection");
   characterContainer.innerHTML = "";
   const character = document.getElementById("character-filter").value;
-  const sprite = map;
-  for (let i = 0; i < sprite.length; i++) {
+
+  currentSpriteChunk = 0;
+  allSpritesLoaded = false;
+  currentMap = map;
+  loadSpriteChunk();
+
+  if (!characterContainer.hasScrollListener) {
+    characterContainer.addEventListener('scroll', handleScroll);
+    characterContainer.hasScrollListener = true;
+  }
+}
+
+function handleScroll() {
+  const characterContainer = document.getElementById("characterSelection");
+  if (characterContainer.scrollLeft + characterContainer.clientWidth >= characterContainer.scrollWidth - 20 && !allSpritesLoaded) {
+    currentSpriteChunk++;
+    loadSpriteChunk();
+  }
+}
+
+function loadSpriteChunk() {
+  if (!currentMap) return;
+
+  const start = currentSpriteChunk * SPRITES_PER_CHUNK;
+  let end = start + SPRITES_PER_CHUNK;
+
+  if (end > currentMap.length) {
+    end = currentMap.length;
+    allSpritesLoaded = true;
+  }
+
+  const characterContainer = document.getElementById("characterSelection");
+
+  for (let i = start; i < end; i++) {
     const spriteImage = new Image();
     spriteImage.loading = "lazy";
     spriteImage.style.objectFit = "cover";
@@ -559,14 +595,19 @@ function generateSpriteVariation(map) {
     spriteImage.style.margin = "5px";
     spriteImage.style.border = "2px solid";
     spriteImage.classList.add("lazy");
-    spriteImage.setAttribute("data-srcset", sprite[i].thumbnail);
-    spriteImage.setAttribute("data-src", sprite[i].thumbnail);
-    spriteImage.src = sprite[i].thumbnail;
+    spriteImage.setAttribute("data-srcset", currentMap[i].thumbnail);
+    spriteImage.setAttribute("data-src", currentMap[i].thumbnail);
+    spriteImage.src = currentMap[i].thumbnail;
     spriteImage.onclick = function () {
       moveCarouselToSprite(i);
     };
     characterContainer.appendChild(spriteImage);
   }
+}
+
+function resetState() {
+  currentSpriteChunk = 0;
+  allSpritesLoaded = false;
 }
 
 // generate a list of available backgrounds and if pressed, move carousel to that background
@@ -575,21 +616,21 @@ function generateBackgroundVariation(map) {
   backgroundContainer.innerHTML = "";
   const background = document.getElementById("bg-filter").value;
   const bg = map;
-for (let i = 0; i < bg.length; i++) {
-    const bgImage = new Image();
-    bgImage.src = bg[i].thumbnail;
-    bgImage.loading = "lazy";
-    bgImage.style.objectFit = "cover";
-    bgImage.style.objectPosition = "center center";
-    bgImage.style.width = "100px";
-    bgImage.style.height = "100px";
-    bgImage.style.margin = "5px";
-    bgImage.style.border = "2px solid";
-    bgImage.onclick = function () {
-      moveCarouselToBackground(i);
-    };
-    backgroundContainer.appendChild(bgImage);
-  }
+  for (let i = 0; i < bg.length; i++) {
+      const bgImage = new Image();
+      bgImage.src = bg[i].thumbnail;
+      bgImage.loading = "lazy";
+      bgImage.style.objectFit = "cover";
+      bgImage.style.objectPosition = "center center";
+      bgImage.style.width = "100px";
+      bgImage.style.height = "100px";
+      bgImage.style.margin = "5px";
+      bgImage.style.border = "2px solid";
+      bgImage.onclick = function () {
+        moveCarouselToBackground(i);
+      };
+      backgroundContainer.appendChild(bgImage);
+    }
 }
 
 function moveCarouselToBackground(bgIndex) {
