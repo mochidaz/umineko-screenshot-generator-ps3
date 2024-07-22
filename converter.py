@@ -25,5 +25,5 @@ def convert_directory(root_dir):
                     print(f"Failed to convert: {png_path}")
 
 if __name__ == "__main__":
-    input_directory = "assets"  # Replace with the path to your directory
+    input_directory = "assets"
     convert_directory(input_directory)
